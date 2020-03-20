@@ -14,11 +14,11 @@ func TestStatusesShare(t *testing.T) {
 	passwd := os.Getenv("weibo_passwd")
 	redirecturi := os.Getenv("weibo_redirect_uri")
 	securitydomain := os.Getenv("weibo_security_domain")
-	weibo := NewWeibo(appkey, appsecret, username, passwd, redirecturi)
+	weibo := New(appkey, appsecret, username, passwd, redirecturi)
 	if err := weibo.PCLogin(); err != nil {
 		t.Fatal(err)
 	}
-	code, err := weibo.AuthCode()
+	code, err := weibo.Authorize()
 	if err != nil {
 		t.Fatal(err)
 	}
