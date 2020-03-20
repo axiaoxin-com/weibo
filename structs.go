@@ -51,11 +51,6 @@ type SsoLoginResp struct {
 	CrossDomainURLList []string `json:"crossDomainUrlList"`
 }
 
-// RedirectResp 微博回调httpbin.org/get返回结构
-type RedirectResp struct {
-	Args map[string]string `json:"args"`
-}
-
 // TokenResp accesstoken返回结构
 type TokenResp struct {
 	AccessToken string `json:"access_token"`

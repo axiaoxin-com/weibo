@@ -20,9 +20,7 @@
 package weibo
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -59,13 +57,10 @@ func (w *Weibo) Authorize() (string, error) {
 		return "", errors.Wrap(err, "weibo Authorize Do error")
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", errors.Wrap(err, "weibo Authorize ReadAll error")
+	uri := resp.Request.URL.String()
+	s := strings.Split(uri, "code=")
+	if len(s) != 2 {
+		return "", errors.New("weibo Authorize get code from uri error, uri=" + uri)
 	}
-	redirectResp := &RedirectResp{}
-	if err := json.Unmarshal(body, redirectResp); err != nil {
-		return "", errors.Wrap(err, "weibo Authorize Unmarshal error")
-	}
-	return redirectResp.Args["code"], nil
+	return s[1], nil
 }
