@@ -13,6 +13,7 @@ import (
 // password 微博密码
 // redirecturi 微博开发平台app设置的回调url
 func New(appkey, appsecret, username, passwd, redirecturi string) *Weibo {
+	// 设置cookiejar后续请求会自动带cookie保持会话
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
 		Jar: jar,
