@@ -31,8 +31,9 @@ func TestStatusesShare(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log("StatusesShare text")
-	status := fmt.Sprintf("%s http://%s", time.Now().Format("2006-01-02 15:04:05"), securitydomain)
-	if err := weibo.StatusesShare(token.AccessToken, status, nil); err != nil {
+	status := fmt.Sprintf("unit test at %s http://%s", time.Now().Format("2006-01-02 15:04:05"), securitydomain)
+	resp, err := weibo.StatusesShare(token.AccessToken, status, nil)
+	if err != nil {
 		t.Error(err)
 	}
 	time.Sleep(2 * time.Second)
@@ -42,7 +43,9 @@ func TestStatusesShare(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer pic.Close()
-	if err := weibo.StatusesShare(token.AccessToken, status, pic); err != nil {
+	resp, err = weibo.StatusesShare(token.AccessToken, status, pic)
+	if err != nil {
 		t.Error(err)
 	}
+	t.Log("http://weibo.com/" + resp.User.ProfileURL)
 }

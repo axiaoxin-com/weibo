@@ -22,7 +22,7 @@ import (
 // token 为获取到的access_token内容
 // status 为微博文字内容
 // pic 为附带的一张图片，传nil则只发文字
-func (w *Weibo) StatusesShare(token, status string, pic io.Reader) error {
+func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesShareResp, error) {
 	apiURL := "https://api.weibo.com/2/statuses/share.json"
 	ip := realip()
 	bodyBuf := &bytes.Buffer{}
@@ -37,26 +37,26 @@ func (w *Weibo) StatusesShare(token, status string, pic io.Reader) error {
 	} else {
 		picWriter, err := writer.CreateFormFile("pic", "picname.png")
 		if err != nil {
-			return errors.Wrap(err, "weibo StatusesShare CreateFormFile error")
+			return nil, errors.Wrap(err, "weibo StatusesShare CreateFormFile error")
 		}
 		if _, err := io.Copy(picWriter, pic); err != nil {
-			return errors.Wrap(err, "weibo StatusesShare io.Copy error")
+			return nil, errors.Wrap(err, "weibo StatusesShare io.Copy error")
 		}
 
 		if err := writer.WriteField("access_token", token); err != nil {
-			return errors.Wrap(err, "weibo StatusesShare WriteField access_token error")
+			return nil, errors.Wrap(err, "weibo StatusesShare WriteField access_token error")
 		}
 		if err := writer.WriteField("status", status); err != nil {
-			return errors.Wrap(err, "weibo StatusesShare WriteField status error")
+			return nil, errors.Wrap(err, "weibo StatusesShare WriteField status error")
 		}
 		if err := writer.WriteField("rip", ip); err != nil {
-			return errors.Wrap(err, "weibo StatusesShare WriteField rip error")
+			return nil, errors.Wrap(err, "weibo StatusesShare WriteField rip error")
 		}
 		writer.Close() // must close before new request
 	}
 	req, err := http.NewRequest("POST", apiURL, bodyBuf)
 	if err != nil {
-		return errors.Wrap(err, "weibo StatusesShare NewRequest error")
+		return nil, errors.Wrap(err, "weibo StatusesShare NewRequest error")
 	}
 	if pic == nil {
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -65,20 +65,20 @@ func (w *Weibo) StatusesShare(token, status string, pic io.Reader) error {
 	}
 	resp, err := w.client.Do(req)
 	if err != nil {
-		return errors.Wrap(err, "weibo StatusesShare Do error")
+		return nil, errors.Wrap(err, "weibo StatusesShare Do error")
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.Wrap(err, "weibo StatusesShare ReadAll error")
+		return nil, errors.Wrap(err, "weibo StatusesShare ReadAll error")
 	}
 	sr := &StatusesShareResp{}
 	if err := json.Unmarshal(body, sr); err != nil {
-		return errors.Wrap(err, "weibo StatusesShare Unmarshal error:"+string(body))
+		return nil, errors.Wrap(err, "weibo StatusesShare Unmarshal error:"+string(body))
 	}
-	if sr.IDStr == "" {
-		return errors.New(string(body))
+	if sr.Idstr == "" {
+		return nil, errors.New(string(body))
 	}
-	return nil
+	return sr, nil
 }
