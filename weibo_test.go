@@ -38,7 +38,7 @@ func TestStatusesShare(t *testing.T) {
 	}
 	time.Sleep(2 * time.Second)
 	t.Log("StatusesShare pic")
-	pic, err := os.Open("./pic.jpg")
+	pic, err := os.Open("./example/pic.jpg")
 	if err != nil {
 		t.Fatal(err)
 	}
