@@ -42,7 +42,7 @@ func main() {
 	weibo.RegisterCrackPinFunc(cracker.Cr4ck)
 	fmt.Println("验证码破解方法注册成功")
 
-	// 登录微博
+	// 登录微博 遇到验证码将自动识别
 	if err := weibo.PCLogin(); err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 发送文字微博，必须带有安全域名链接
+	// 发送微博，必须带有安全域名链接
 	status := fmt.Sprintf("文本内容 http://%s", securitydomain)
 	resp, err := weibo.StatusesShare(token.AccessToken, status, nil)
 	if err != nil {

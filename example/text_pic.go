@@ -39,9 +39,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 文本内容，必须带有安全域名链接
+	// 发送微博，必须带有安全域名链接
 	status := fmt.Sprintf("文字带图片示例 http://%s", securitydomain)
-
 	// 加载要发送的图片，加载方式只要是返回io.Reader都可以
 	pic, err := os.Open("./pic.jpg")
 	if err != nil {
