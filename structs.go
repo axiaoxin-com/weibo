@@ -3,6 +3,7 @@
 package weibo
 
 import (
+	"io"
 	"net/http"
 )
 
@@ -123,15 +124,19 @@ type StatusesShareResp struct {
 	PicNum int `json:"pic_num"`
 }
 
+// CrackPinFunc 验证码破解方法定义
+type CrackPinFunc func(io.Reader) (string, error)
+
 // Weibo 定义各种微博相关方法
 type Weibo struct {
-	client      *http.Client
-	appkey      string
-	appsecret   string
-	redirecturi string
-	username    string
-	passwd      string
-	userAgent   string
+	client        *http.Client
+	appkey        string
+	appsecret     string
+	redirecturi   string
+	username      string
+	passwd        string
+	userAgent     string
+	crackPinFuncs []CrackPinFunc
 }
 
 // MobileLoginResp 移动登录返回结构
