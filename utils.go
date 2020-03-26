@@ -6,6 +6,8 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -46,4 +48,15 @@ func realip() string {
 		}
 	}
 	return ip
+}
+
+func terminalOpen(filePath string) error {
+	switch runtime.GOOS {
+	case "linux":
+		return exec.Command("xdg-open", filePath).Run()
+	case "windows":
+		return exec.Command("start", filePath).Run()
+	default:
+		return exec.Command("open", filePath).Run()
+	}
 }

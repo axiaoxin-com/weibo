@@ -247,10 +247,12 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 					return errors.Wrap(err, "weibo PCLogin Create png file error")
 				}
 				defer pinFile.Close()
+				defer os.Remove(pinFilename)
 				if _, err := io.Copy(pinFile, pinPic); err != nil {
 					return errors.Wrap(err, "weibo PCLogin Copy pinPic to pinFile error")
 				}
-
+				// 尝试直接打开图片
+				terminalOpen(pinFilename)
 				// 等待用户输入验证码
 				log.Printf("请输入 %s 中的验证码:", pinFilename)
 				fmt.Scanln(&pinCode)
