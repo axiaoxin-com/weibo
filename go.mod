@@ -1,4 +1,4 @@
-module github.com/axiaoxin/weibo
+module github.com/axiaoxin-com/weibo
 
 go 1.13
 

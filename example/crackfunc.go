@@ -10,8 +10,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/axiaoxin/chaojiying"
-	"github.com/axiaoxin/weibo"
+	"github.com/axiaoxin-com/chaojiying"
+	"github.com/axiaoxin-com/weibo"
 )
 
 func main() {

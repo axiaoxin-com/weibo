@@ -8,13 +8,13 @@
 
 代码组织结构已按新浪微博提供的接口拆分，已支持的功能列表：
 
-- [模拟电脑浏览器登录](https://github.com/axiaoxin/weibo/blob/master/login.go#L200)
-- [注册验证码破解函数](https://github.com/axiaoxin/weibo/blob/master/login.go#L81)
-- [模拟移动端登录](https://github.com/axiaoxin/weibo/blob/master/login.go#L30)
-- [获取 Authorize Code](https://github.com/axiaoxin/weibo/blob/master/authorize.go)
-- [获取 Access Token](https://github.com/axiaoxin/weibo/blob/master/access_token.go)
-- [查询 Access Token 信息](https://github.com/axiaoxin/weibo/blob/master/get_token_info.go)
-- [分享一条链接到微博（发微博）](https://github.com/axiaoxin/weibo/blob/master/statuses_share.go)
+- [模拟电脑浏览器登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L200)
+- [注册验证码破解函数](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L81)
+- [模拟移动端登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L30)
+- [获取 Authorize Code](https://github.com/axiaoxin-com/weibo/blob/master/authorize.go)
+- [获取 Access Token](https://github.com/axiaoxin-com/weibo/blob/master/access_token.go)
+- [查询 Access Token 信息](https://github.com/axiaoxin-com/weibo/blob/master/get_token_info.go)
+- [分享一条链接到微博（发微博）](https://github.com/axiaoxin-com/weibo/blob/master/statuses_share.go)
 
 ## 特性
 
@@ -33,14 +33,14 @@
 ## 安装
 
 ```
-go get -u -v github.com/axiaoxin/weibo
+go get -u -v github.com/axiaoxin-com/weibo
 ```
 
 ## 使用示例
 
 ### 发送纯文本内容的微博
 
-[example/text.go](https://github.com/axiaoxin/weibo/blob/master/example/text.go)
+[example/text.go](https://github.com/axiaoxin-com/weibo/blob/master/example/text.go)
 
 ```go
 // 发送文本内容示例
@@ -52,7 +52,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axiaoxin/weibo"
+	"github.com/axiaoxin-com/weibo"
 )
 
 func main() {
@@ -96,7 +96,7 @@ func main() {
 
 ### 发送文字内容带图片的微博
 
-[example/text_pic.go](https://github.com/axiaoxin/weibo/blob/master/example/text_pic.go)
+[example/text_pic.go](https://github.com/axiaoxin-com/weibo/blob/master/example/text_pic.go)
 
 ```go
 // 发送带图片的文本内容示例
@@ -108,7 +108,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axiaoxin/weibo"
+	"github.com/axiaoxin-com/weibo"
 )
 
 func main() {
@@ -158,7 +158,7 @@ func main() {
 
 ### 注册破解函数
 
-[example/crackfunc.go](https://github.com/axiaoxin/weibo/blob/master/example/crackfunc.go)
+[example/crackfunc.go](https://github.com/axiaoxin-com/weibo/blob/master/example/crackfunc.go)
 
 ```go
 // 注册验证码破解函数示例
@@ -173,8 +173,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/axiaoxin/chaojiying"
-	"github.com/axiaoxin/weibo"
+	"github.com/axiaoxin-com/chaojiying"
+	"github.com/axiaoxin-com/weibo"
 )
 
 func main() {

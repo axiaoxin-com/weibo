@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axiaoxin/weibo"
+	"github.com/axiaoxin-com/weibo"
 )
 
 func main() {
