@@ -36,6 +36,10 @@
 go get -u -v github.com/axiaoxin-com/weibo
 ```
 
+## 在线文档
+
+<https://pkg.go.dev/github.com/axiaoxin-com/weibo?tab=doc>
+
 ## 使用示例
 
 ### 发送纯文本内容的微博
