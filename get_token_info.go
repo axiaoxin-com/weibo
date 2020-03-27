@@ -20,7 +20,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TokenInfo 查询用户access_token的授权相关信息，包括授权时间，过期时间和scope权限
+// TokenInfo 获取用户 access_token 的授权相关信息，包括授权时间，过期时间和 scope 权限
 func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
 	apiURL := "https://api.weibo.com/oauth2/get_token_info"
 	data := url.Values{

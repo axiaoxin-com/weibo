@@ -24,7 +24,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// AccessToken 传入授权码请求access_token接口，返回token对象
+// AccessToken 传入授权码请求 access_token 接口，返回 TokenResp 对象
 func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
 	tokenURL := "https://api.weibo.com/oauth2/access_token"
 	data := url.Values{

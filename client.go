@@ -1,4 +1,4 @@
-// Package weibo 封装微博API
+// Package weibo 新浪微博 SDK
 package weibo
 
 import (
@@ -6,12 +6,18 @@ import (
 	"net/http/cookiejar"
 )
 
-// New 创建Weibo实例
-// appkey 微博开放平台appkey
-// appsecret 微博开放平台appsecret
-// username 微博登录账号
-// password 微博密码
-// redirecturi 微博开发平台app设置的回调url
+/*New 创建Weibo实例
+
+appkey 微博开放平台应用的 appkey
+
+appsecret 微博开放平台应用的 appsecret
+
+username 需要发微博的微博登录账号，用于模拟登录直接获取授权码
+
+password 需要发微博的微博登录密码，用于模拟登录直接获取授权码
+
+redirecturi 微博开发平台应用的回调 URL
+*/
 func New(appkey, appsecret, username, passwd, redirecturi string) *Weibo {
 	// 设置cookiejar后续请求会自动带cookie保持会话
 	jar, _ := cookiejar.New(nil)

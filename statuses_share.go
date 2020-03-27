@@ -18,10 +18,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-// StatusesShare 第三方分享一条链接到微博
-// token 为获取到的access_token内容
-// status 为微博文字内容
-// pic 为附带的一张图片，传nil则只发文字
+/*StatusesShare 第三方分享一条链接到微博
+
+token 为获取到的access_token内容
+
+status 为微博文字内容
+
+pic 为附带的一张图片，传nil则只发文字
+*/
 func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesShareResp, error) {
 	apiURL := "https://api.weibo.com/2/statuses/share.json"
 	ip := realip()

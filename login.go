@@ -25,8 +25,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// MobileLogin 移动端登录微博
-// 该登录无法获取开放平台token
+// MobileLogin 模拟移动端登录微博
+// （该登录无法通过调用 Authorize 方法获取开放平台的 token）
 func (w *Weibo) MobileLogin() error {
 	data := url.Values{
 		"username":     {w.username},
@@ -77,13 +77,14 @@ func (w *Weibo) MobileLogin() error {
 	return nil
 }
 
-// RegisterCrackPinFunc 注册验证码破解方法
+// RegisterCrackPinFunc 注册验证码破解方法到 Weibo 实例
+// 触发验证码时自动调用注册的方法进行破解后模拟登录
 func (w *Weibo) RegisterCrackPinFunc(f ...CrackPinFunc) {
 	w.crackPinFuncs = append(w.crackPinFuncs, f...)
 }
 
-func (w *Weibo) preLogin() (*PreLoginResp, error) {
-	// 请求prelogin 获得 servertime, nonce, pubkey, rsakv
+// 请求prelogin 获得 servertime, nonce, pubkey, rsakv 用于ssologin
+func (w *Weibo) preLogin() (*preLoginResp, error) {
 	// 对账号进行base64编码 对应javascript中encodeURIComponent然后base64编码
 	preloginURL := "https://login.sina.com.cn/sso/prelogin.php?"
 	req, err := http.NewRequest("GET", preloginURL, nil)
@@ -114,25 +115,26 @@ func (w *Weibo) preLogin() (*PreLoginResp, error) {
 		return nil, errors.Wrap(err, "weibo preLogin ReadAll prelogin error")
 	}
 
-	preLoginResp := &PreLoginResp{}
-	if err := json.Unmarshal(body, preLoginResp); err != nil {
+	r := &preLoginResp{}
+	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo preLogin Unmarshal preLoginResp error")
 	}
 
-	if preLoginResp.Retcode != 0 {
+	if r.Retcode != 0 {
 		return nil, errors.New("weibo preLogin preLoginResp Retcode error:" + string(body))
 	}
 
-	return preLoginResp, nil
+	return r, nil
 }
 
-func (w *Weibo) ssoLogin(preLoginResp *PreLoginResp, pinCode string) (*SsoLoginResp, error) {
+// ssologin 真正的登录
+func (w *Weibo) ssoLogin(pr *preLoginResp, pinCode string) (*ssoLoginResp, error) {
 	ssologinURL := "https://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.19)"
 
 	// 拼接明文js加密文件中得到
-	encMsg := []byte(fmt.Sprint(preLoginResp.Servertime, "\t", preLoginResp.Nonce, "\n", w.passwd))
+	encMsg := []byte(fmt.Sprint(pr.Servertime, "\t", pr.Nonce, "\n", w.passwd))
 	// 创建公钥
-	n, _ := new(big.Int).SetString(preLoginResp.Pubkey, 16)
+	n, _ := new(big.Int).SetString(pr.Pubkey, 16)
 	e, _ := new(big.Int).SetString("10001", 16)
 	pubkey := &rsa.PublicKey{N: n, E: int(e.Int64())}
 	// 加密公钥
@@ -153,10 +155,10 @@ func (w *Weibo) ssoLogin(preLoginResp *PreLoginResp, pinCode string) (*SsoLoginR
 		"vsnf":       {"1"},
 		"su":         {su},
 		"service":    {"account"},
-		"servertime": {fmt.Sprint(preLoginResp.Servertime, randInt(1, 20))},
-		"nonce":      {preLoginResp.Nonce},
+		"servertime": {fmt.Sprint(pr.Servertime, randInt(1, 20))},
+		"nonce":      {pr.Nonce},
 		"pwencode":   {"rsa2"},
-		"rsakv":      {preLoginResp.Rsakv},
+		"rsakv":      {pr.Rsakv},
 		"sp":         {hexsp},
 		"sr":         {"1536 * 864"},
 		"encoding":   {"UTF - 8"},
@@ -187,16 +189,16 @@ func (w *Weibo) ssoLogin(preLoginResp *PreLoginResp, pinCode string) (*SsoLoginR
 	}
 
 	// 登录结果返回结构体
-	ssoLoginResp := &SsoLoginResp{}
-	if err := json.Unmarshal(body, ssoLoginResp); err != nil {
+	r := &ssoLoginResp{}
+	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo PCLogin Unmarshal ssoLoginResp error")
 	}
 
-	return ssoLoginResp, nil
+	return r, nil
 }
 
-// PCLogin 电脑web登录
-// 登录后才能成功获取开放平台授权码和token
+// PCLogin 模拟电脑 web 登录
+// 登录后才能成功获取开放平台授权码和 token
 func (w *Weibo) PCLogin() error {
 
 	// 是否触发验证码
@@ -205,7 +207,7 @@ func (w *Weibo) PCLogin() error {
 	pinCode := ""
 
 	// 登录返回结果
-	var ssoLoginResp *SsoLoginResp
+	var sr *ssoLoginResp
 
 LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 	for {
@@ -261,18 +263,18 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 		}
 
 		// 请求prelogin
-		preLoginResp, err := w.preLogin()
+		pr, err := w.preLogin()
 		if err != nil {
 			return err
 		}
 
 		// 请求ssologin
-		ssoLoginResp, err = w.ssoLogin(preLoginResp, pinCode)
+		sr, err = w.ssoLogin(pr, pinCode)
 		if err != nil {
 			return err
 		}
 
-		switch ssoLoginResp.Retcode {
+		switch sr.Retcode {
 		case "0":
 			// 成功登录跳出循环
 			break LOGIN
@@ -287,14 +289,14 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 			hasPinCode = true
 		default:
 			// 其他错误
-			return fmt.Errorf("weibo PCLogin ssoLoginResp Retcode error. %+v", ssoLoginResp)
+			return fmt.Errorf("weibo PCLogin ssoLoginResp Retcode error. %+v", sr)
 		}
 	}
-	return w.loginSucceed(ssoLoginResp)
+	return w.loginSucceed(sr)
 }
 
 // loginSucceed 检查PCLogin后是否成功登录微博
-func (w *Weibo) loginSucceed(resp *SsoLoginResp) error {
+func (w *Weibo) loginSucceed(resp *ssoLoginResp) error {
 	// 请求login_url和home_url, 进一步验证登录是否成功
 	s := strings.Split(strings.Split(resp.CrossDomainURLList[0], "ticket=")[1], "&ssosavestate=")
 	loginURL := fmt.Sprintf("https://passport.weibo.com/wbsso/login?ticket=%s&ssosavestate=%s&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=%s", s[0], s[1], strconv.FormatInt(time.Now().UnixNano()/1e6, 10))

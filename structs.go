@@ -124,10 +124,11 @@ type StatusesShareResp struct {
 	PicNum int `json:"pic_num"`
 }
 
-// CrackPinFunc 验证码破解方法定义
+// CrackPinFunc 验证码破解方法类型声明
+// 验证码图片以 io.Reader 类型传入，返回破解结果字符串
 type CrackPinFunc func(io.Reader) (string, error)
 
-// Weibo 定义各种微博相关方法
+// Weibo 实例，在其上实现各类接口
 type Weibo struct {
 	client        *http.Client
 	appkey        string
@@ -139,15 +140,15 @@ type Weibo struct {
 	crackPinFuncs []CrackPinFunc
 }
 
-// MobileLoginResp 移动登录返回结构
+// MobileLoginResp 移动端登录的返回结果
 type MobileLoginResp struct {
 	Retcode int                    `json:"retcode"`
 	Msg     string                 `json:"msg"`
 	Data    map[string]interface{} `json:"data"`
 }
 
-// PreLoginResp PC端prelogin登录返回结构
-type PreLoginResp struct {
+// preLoginResp PC 端 prelogin 的返回结果
+type preLoginResp struct {
 	Retcode    int    `json:"retcode"`
 	Servertime int    `json:"servertime"`
 	Pcid       string `json:"pcid"`
@@ -159,8 +160,8 @@ type PreLoginResp struct {
 	Exectime   int    `json:"exectime"`
 }
 
-// SsoLoginResp PC端ssologin登录返回结构
-type SsoLoginResp struct {
+// ssoLoginResp PC 端 ssologin 登录的返回结果
+type ssoLoginResp struct {
 	Retcode            string   `json:"retcode"`
 	Ticket             string   `json:"ticket"`
 	UID                string   `json:"uid"`
@@ -168,15 +169,15 @@ type SsoLoginResp struct {
 	CrossDomainURLList []string `json:"crossDomainUrlList"`
 }
 
-// TokenResp accesstoken返回结构
+// TokenResp 获取 access token 接口的返回结果
 type TokenResp struct {
-	AccessToken string `json:"access_token"`
-	ExpiresIn   int64  `json:"expires_in"`
+	AccessToken string `json:"access_token"` // access token
+	ExpiresIn   int64  `json:"expires_in"`   // ExpiresIn 秒之后token过期
 	UID         string `json:"uid"`
 	IsRealName  string `json:"isRealName"`
 }
 
-// TokenInfoResp get_token_info接口返回结构
+// TokenInfoResp 查询 token 信息接口的返回结果
 type TokenInfoResp struct {
 	UID      string `json:"uid"`
 	Appkey   string `json:"appkey"`
