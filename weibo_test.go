@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// Bug(testing_with_pin): Go在运行单元测试的时候，被测试的方法里面如果有fmt.Scan这种等待接收外部输入的操作的话它们都不会发生等待，而是会直接跳过，要是在一个死循环里面等待接收输入的方法跑测试就会陷进死循环里，原因是跑测试的时候会把输入重定向到/dev/null
+// 跑测试时如果登录触发验证码时会导致无法进行验证码的输入，无法进行后续测试
 func TestStatusesShare(t *testing.T) {
 	appkey := os.Getenv("weibo_app_key")
 	appsecret := os.Getenv("weibo_app_secret")
