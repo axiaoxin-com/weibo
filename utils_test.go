@@ -2,8 +2,8 @@ package weibo
 
 import "testing"
 
-func TestTerminalOpen(t *testing.T) {
-	if err := terminalOpen("example/pic.jpg"); err != nil {
+func _TestTerminalOpen(t *testing.T) {
+	if err := TerminalOpen("example/pic.jpg"); err != nil {
 		t.Error(err)
 	}
 }

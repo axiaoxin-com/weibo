@@ -28,7 +28,7 @@ pic 为附带的一张图片，传nil则只发文字
 */
 func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesShareResp, error) {
 	apiURL := "https://api.weibo.com/2/statuses/share.json"
-	ip := realip()
+	ip := RealIP()
 	bodyBuf := &bytes.Buffer{}
 	writer := multipart.NewWriter(bodyBuf)
 	if pic == nil {

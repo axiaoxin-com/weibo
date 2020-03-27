@@ -18,20 +18,20 @@ var UserAgents []string = []string{
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36",
 }
 
-// 随机返回一个UserAgents中的ua
-func randUA() string {
+// RandUA 随机返回一个 UserAgents 中的元素
+func RandUA() string {
 	rand.Seed(time.Now().Unix())
 	return UserAgents[rand.Intn(len(UserAgents))]
 }
 
-// randInt 产生指定数字范围内的随机数
-func randInt(min int, max int) int {
+// RandInt 产生指定数字范围内的随机数
+func RandInt(min int, max int) int {
 	rand.Seed(time.Now().UnixNano())
 	return min + rand.Intn(max-min)
 }
 
-// realip 获取ip地址
-func realip() string {
+// RealIP 获取 IP 地址
+func RealIP() string {
 	ip := "127.0.0.1"
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -50,7 +50,8 @@ func realip() string {
 	return ip
 }
 
-func terminalOpen(filePath string) error {
+// TerminalOpen 调用终端打开文件命令
+func TerminalOpen(filePath string) error {
 	switch runtime.GOOS {
 	case "linux":
 		return exec.Command("xdg-open", filePath).Run()

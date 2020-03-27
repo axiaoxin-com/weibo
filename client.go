@@ -31,6 +31,6 @@ func New(appkey, appsecret, username, passwd, redirecturi string) *Weibo {
 		redirecturi: redirecturi,
 		username:    username,
 		passwd:      passwd,
-		userAgent:   randUA(),
+		userAgent:   RandUA(),
 	}
 }

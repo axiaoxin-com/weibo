@@ -155,7 +155,7 @@ func (w *Weibo) ssoLogin(pr *preLoginResp, pinCode string) (*ssoLoginResp, error
 		"vsnf":       {"1"},
 		"su":         {su},
 		"service":    {"account"},
-		"servertime": {fmt.Sprint(pr.Servertime, randInt(1, 20))},
+		"servertime": {fmt.Sprint(pr.Servertime, RandInt(1, 20))},
 		"nonce":      {pr.Nonce},
 		"pwencode":   {"rsa2"},
 		"rsakv":      {pr.Rsakv},
@@ -214,7 +214,7 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 		// 触发验证码时进行破解，最终得到字符串验证码
 		if hasPinCode {
 			// 获取验证码图片
-			randNum := randInt(10000000, 100000000) // 8位的随机数
+			randNum := RandInt(10000000, 100000000) // 8位的随机数
 			pinURL := fmt.Sprintf("https://login.sina.com.cn/cgi/pin.php?r=%d&s=0", randNum)
 			resp, err := w.client.Get(pinURL)
 			if err != nil {
@@ -254,11 +254,16 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 					return errors.Wrap(err, "weibo PCLogin Copy pinPic to pinFile error")
 				}
 				// 尝试直接打开图片
-				terminalOpen(pinFilename)
+				if err := TerminalOpen(pinFilename); err != nil {
+					log.Println("[ERROR] weibo TerminalOpen error", err)
+				}
+
 				// 等待用户输入验证码
 				log.Printf("请输入 %s 中的验证码:", pinFilename)
-				fmt.Scanln(&pinCode)
-				log.Println("正在登录...")
+				if _, err := fmt.Scanln(&pinCode); err != nil {
+					return errors.Wrap(err, "weibo Scanln pinCode error")
+				}
+				log.Printf("正在登录...")
 			}
 		}
 
