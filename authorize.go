@@ -21,6 +21,7 @@ package weibo
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -32,6 +33,7 @@ import (
 func (w *Weibo) Authorize() (string, error) {
 	authURL := "https://api.weibo.com/oauth2/authorize"
 	referer := fmt.Sprintf("%s?client_id=%s&redirect_uri=%s", authURL, w.appkey, w.redirecturi)
+	log.Println("[DEBUG] weibo Authorize referer:", referer)
 	data := url.Values{
 		"client_id":       {w.appkey},
 		"response_type":   {"code"},
@@ -60,7 +62,7 @@ func (w *Weibo) Authorize() (string, error) {
 	uri := resp.Request.URL.String()
 	s := strings.Split(uri, "code=")
 	if len(s) != 2 {
-		return "", errors.New("weibo Authorize get code from uri error, uri=" + uri)
+		return "", errors.New("weibo Authorize get code from uri error, authorize code url=" + uri)
 	}
 	return s[1], nil
 }
