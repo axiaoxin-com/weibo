@@ -4,6 +4,7 @@ package weibo
 import (
 	"net/http"
 	"net/http/cookiejar"
+	"time"
 )
 
 /*New 创建Weibo实例
@@ -22,7 +23,8 @@ func New(appkey, appsecret, username, passwd, redirecturi string) *Weibo {
 	// 设置cookiejar后续请求会自动带cookie保持会话
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
-		Jar: jar,
+		Jar:     jar,
+		Timeout: 30 * time.Second,
 	}
 	return &Weibo{
 		client:      client,
