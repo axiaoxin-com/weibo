@@ -38,7 +38,7 @@ go get -u -v github.com/axiaoxin-com/weibo
 
 ## 在线文档
 
-<https://pkg.go.dev/github.com/axiaoxin-com/weibo?tab=doc>
+<https://godoc.org/github.com/axiaoxin-com/weibo>
 
 ## 使用示例
 
