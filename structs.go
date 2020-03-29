@@ -185,3 +185,16 @@ type TokenInfoResp struct {
 	CreateAt string `json:"create_at"`
 	ExpireIn string `json:"expire_in"`
 }
+
+// EmotionsResp Emotions接口返回结果
+type EmotionsResp []struct {
+	Category string      `json:"category"`
+	Common   bool        `json:"common"`
+	Hot      bool        `json:"hot"`
+	Icon     string      `json:"icon"`
+	Phrase   string      `json:"phrase"`
+	Picid    interface{} `json:"picid"`
+	Type     string      `json:"type"`
+	URL      string      `json:"url"`
+	Value    string      `json:"value"`
+}
