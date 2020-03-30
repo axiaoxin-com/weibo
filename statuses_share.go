@@ -14,6 +14,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/pkg/errors"
 )
@@ -39,6 +40,10 @@ func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesSha
 		}
 		bodyBuf = bytes.NewBufferString(data.Encode())
 	} else {
+		// close pic if it's a file
+		if f, ok := pic.(*os.File); ok {
+			defer f.Close()
+		}
 		picWriter, err := writer.CreateFormFile("pic", "picname.png")
 		if err != nil {
 			return nil, errors.Wrap(err, "weibo StatusesShare CreateFormFile error")
