@@ -43,7 +43,7 @@ func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
 	}
 	tokenInfoResp := &TokenInfoResp{}
 	if err := json.Unmarshal(body, tokenInfoResp); err != nil {
-		return nil, errors.Wrap(err, "weibo TokenInfo Unmarshal error")
+		return nil, errors.Wrap(err, "weibo TokenInfo Unmarshal error:"+string(body))
 	}
 	return tokenInfoResp, nil
 }

@@ -41,7 +41,7 @@ func (w *Weibo) Emotions(token, emotionType, language string) (*EmotionsResp, er
 	}
 	r := &EmotionsResp{}
 	if err := json.Unmarshal(body, r); err != nil {
-		return nil, errors.Wrap(err, "weibo Emotions Unmarshal error")
+		return nil, errors.Wrap(err, "weibo Emotions Unmarshal error:"+string(body))
 	}
 	return r, nil
 }

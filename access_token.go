@@ -51,7 +51,7 @@ func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
 	}
 	tokenResp := &TokenResp{}
 	if err := json.Unmarshal(body, tokenResp); err != nil {
-		return nil, errors.Wrap(err, "weibo AccessToken Unmarshal error")
+		return nil, errors.Wrap(err, "weibo AccessToken Unmarshal error:"+string(body))
 	}
 	if tokenResp.AccessToken == "" {
 		return nil, errors.New("weibo AccessToken get token failed." + string(body))

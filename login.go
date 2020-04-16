@@ -69,7 +69,7 @@ func (w *Weibo) MobileLogin() error {
 	}
 	loginResp := &MobileLoginResp{}
 	if err := json.Unmarshal(body, loginResp); err != nil {
-		return errors.Wrap(err, "weibo MobileLogin Unmarshal error")
+		return errors.Wrap(err, "weibo MobileLogin Unmarshal error:"+string(body))
 	}
 	if loginResp.Retcode != 20000000 {
 		return errors.New("weibo MobileLogin loginResp Retcode error:" + string(body))
@@ -117,7 +117,7 @@ func (w *Weibo) preLogin() (*preLoginResp, error) {
 
 	r := &preLoginResp{}
 	if err := json.Unmarshal(body, r); err != nil {
-		return nil, errors.Wrap(err, "weibo preLogin Unmarshal preLoginResp error")
+		return nil, errors.Wrap(err, "weibo preLogin Unmarshal preLoginResp error:"+string(body))
 	}
 
 	if r.Retcode != 0 {
@@ -191,7 +191,7 @@ func (w *Weibo) ssoLogin(pr *preLoginResp, pinCode string) (*ssoLoginResp, error
 	// 登录结果返回结构体
 	r := &ssoLoginResp{}
 	if err := json.Unmarshal(body, r); err != nil {
-		return nil, errors.Wrap(err, "weibo PCLogin Unmarshal ssoLoginResp error")
+		return nil, errors.Wrap(err, "weibo PCLogin Unmarshal ssoLoginResp error:"+string(body))
 	}
 
 	return r, nil
