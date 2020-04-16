@@ -25,7 +25,7 @@ func (w *Weibo) Emotions(token, emotionType, language string) (*EmotionsResp, er
 		"type":         {emotionType},
 		"language":     {language},
 	}
-	req, err := http.NewRequest("GET", apiURL, nil)
+	req, err := http.NewRequest(http.MethodGet, apiURL, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo Emotions NewRequest error")
 	}
@@ -40,6 +40,11 @@ func (w *Weibo) Emotions(token, emotionType, language string) (*EmotionsResp, er
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo Emotions ReadAll error")
+	}
+	e := &ErrorResp{}
+	json.Unmarshal(body, e)
+	if e.Error != "" && e.ErrorCode != 0 {
+		return nil, errors.New("weibo Emotions resp error:" + e.Error)
 	}
 	r := &EmotionsResp{}
 	if err := json.Unmarshal(body, r); err != nil {

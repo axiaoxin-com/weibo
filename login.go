@@ -46,7 +46,7 @@ func (w *Weibo) MobileLogin() error {
 		"hfp":          {""},
 	}
 	logingURL := "https://passport.weibo.cn/sso/login"
-	req, err := http.NewRequest("POST", logingURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, logingURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return errors.Wrap(err, "weibo MobileLogin NewRequest error")
 	}
@@ -87,7 +87,7 @@ func (w *Weibo) RegisterCrackPinFunc(f ...CrackPinFunc) {
 func (w *Weibo) preLogin() (*preLoginResp, error) {
 	// 对账号进行base64编码 对应javascript中encodeURIComponent然后base64编码
 	preloginURL := "https://login.sina.com.cn/sso/prelogin.php?"
-	req, err := http.NewRequest("GET", preloginURL, nil)
+	req, err := http.NewRequest(http.MethodGet, preloginURL, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo PCLogin NewRequest prelogin error")
 	}
@@ -171,7 +171,7 @@ func (w *Weibo) ssoLogin(pr *preLoginResp, pinCode string) (*ssoLoginResp, error
 	if pinCode != "" {
 		data.Add("door", pinCode)
 	}
-	req, err := http.NewRequest("POST", ssologinURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, ssologinURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo PCLogin NewRequest ssologin error")
 	}
@@ -305,7 +305,7 @@ func (w *Weibo) loginSucceed(resp *ssoLoginResp) error {
 	// 请求login_url和home_url, 进一步验证登录是否成功
 	s := strings.Split(strings.Split(resp.CrossDomainURLList[0], "ticket=")[1], "&ssosavestate=")
 	loginURL := fmt.Sprintf("https://passport.weibo.com/wbsso/login?ticket=%s&ssosavestate=%s&callback=sinaSSOController.doCrossDomainCallBack&scriptId=ssoscript0&client=ssologin.js(v1.4.19)&_=%s", s[0], s[1], strconv.FormatInt(time.Now().UnixNano()/1e6, 10))
-	req, err := http.NewRequest("GET", loginURL, nil)
+	req, err := http.NewRequest(http.MethodGet, loginURL, nil)
 	if err != nil {
 		return errors.Wrap(err, "weibo loginSucceed NewRequest loginURL error")
 	}
@@ -327,7 +327,7 @@ func (w *Weibo) loginSucceed(resp *ssoLoginResp) error {
 	}
 	uid := result[0][1]
 	homeURL := fmt.Sprintf("https://weibo.com/u/%s/home", uid)
-	req, err = http.NewRequest("GET", homeURL, nil)
+	req, err = http.NewRequest(http.MethodGet, homeURL, nil)
 	req.Header.Set("User-Agent", w.userAgent)
 	res, err = w.client.Do(req)
 	if err != nil {

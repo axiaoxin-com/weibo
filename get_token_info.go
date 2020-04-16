@@ -26,7 +26,7 @@ func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
 	data := url.Values{
 		"access_token": {token},
 	}
-	req, err := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, apiURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo TokenInfo NewRequest error")
 	}
@@ -44,6 +44,9 @@ func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
 	tokenInfoResp := &TokenInfoResp{}
 	if err := json.Unmarshal(body, tokenInfoResp); err != nil {
 		return nil, errors.Wrap(err, "weibo TokenInfo Unmarshal error:"+string(body))
+	}
+	if tokenInfoResp.Error != "" && tokenInfoResp.ErrorCode != 0 {
+		return nil, errors.New("weibi TokenInfo resp error:" + TokenResp.Error)
 	}
 	return tokenInfoResp, nil
 }

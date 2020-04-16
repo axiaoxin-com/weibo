@@ -63,7 +63,7 @@ func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesSha
 		}
 		writer.Close() // must close before new request
 	}
-	req, err := http.NewRequest("POST", apiURL, bodyBuf)
+	req, err := http.NewRequest(http.MethodPost, apiURL, bodyBuf)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesShare NewRequest error")
 	}
@@ -85,6 +85,9 @@ func (w *Weibo) StatusesShare(token, status string, pic io.Reader) (*StatusesSha
 	sr := &StatusesShareResp{}
 	if err := json.Unmarshal(body, sr); err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesShare Unmarshal error:"+string(body))
+	}
+	if sr.Error != "" && sr.ErrorCode != 0 {
+		return nil, errors.New("weibo StatusesShare resp error:" + sr.Error)
 	}
 	if sr.Idstr == "" {
 		return nil, errors.New(string(body))

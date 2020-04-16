@@ -34,7 +34,7 @@ func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
 		"code":          {code},
 		"redirect_uri":  {w.redirecturi},
 	}
-	req, err := http.NewRequest("POST", tokenURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, tokenURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo AccessToken NewRequest error")
 	}

@@ -45,7 +45,7 @@ func (w *Weibo) CommentsByMe(token string, sinceID, maxID, count, page, filterBy
 		"page":             {strconv.Itoa(page)},
 		"filter_by_source": {strconv.Itoa(filterBySource)},
 	}
-	req, err := http.NewRequest("GET", apiURL, nil)
+	req, err := http.NewRequest(http.MethodGet, apiURL, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo CommentsByMe NewRequest error")
 	}
@@ -64,6 +64,9 @@ func (w *Weibo) CommentsByMe(token string, sinceID, maxID, count, page, filterBy
 	r := &CommentsByMeResp{}
 	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo CommentsByMe Unmarshal error:"+string(body))
+	}
+	if r.Error != "" && r.ErrorCode != 0 {
+		return nil, errors.New("weibo CommentsByMe resp error:" + r.Error)
 	}
 	return r, nil
 }

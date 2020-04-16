@@ -37,7 +37,4 @@ func TestCommentsByMe(t *testing.T) {
 		t.Error(err)
 	}
 	t.Logf("%+v", resp)
-	if resp.TotalNumber == 0 {
-		t.Error("TotalNumber == 0")
-	}
 }

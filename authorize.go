@@ -48,7 +48,7 @@ func (w *Weibo) Authorize() (string, error) {
 		"ticket":          {""},
 		"withOfficalFlag": {"0"},
 	}
-	req, err := http.NewRequest("POST", authURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(http.MethodPost, authURL, strings.NewReader(data.Encode()))
 	if err != nil {
 		return "", errors.Wrap(err, "weibo Authorize NewRequest error")
 	}

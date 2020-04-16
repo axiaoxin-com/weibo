@@ -32,7 +32,7 @@ func RandInt(min int, max int) int {
 
 // RealIP 获取 IP 地址
 func RealIP() string {
-	ip := "127.0.0.1"
+	ip := ""
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		log.Println("[WARN] get ip error:" + err.Error())
