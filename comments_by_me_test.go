@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestEmotions(t *testing.T) {
+func TestCommentsByMe(t *testing.T) {
 	appkey := os.Getenv("weibo_app_key")
 	appsecret := os.Getenv("weibo_app_secret")
 	username := os.Getenv("weibo_username")
@@ -27,13 +27,17 @@ func TestEmotions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// face ani cartoon
-	resp, err := weibo.Emotions(token.AccessToken, "ani", "cnname")
+	sinceID := 0
+	maxID := 0
+	count := 50
+	page := 1
+	filterBySource := 0
+	resp, err := weibo.CommentsByMe(token.AccessToken, sinceID, maxID, count, page, filterBySource)
 	if err != nil {
 		t.Error(err)
 	}
 	t.Logf("%+v", resp)
-	if len(*resp) == 0 {
-		t.Error("no emotions return")
+	if resp.TotalNumber == 0 {
+		t.Error("TotalNumber == 0")
 	}
 }

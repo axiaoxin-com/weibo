@@ -16,6 +16,8 @@ import (
 )
 
 // Emotions 获取微博官方表情的详细信息
+// emotionType 表情类别，face：普通表情、ani：魔法表情、cartoon：动漫表情，默认为face
+// language 语言类别，cnname：简体、twname：繁体，默认为cnname
 func (w *Weibo) Emotions(token, emotionType, language string) (*EmotionsResp, error) {
 	apiURL := "https://api.weibo.com/2/emotions.json"
 	data := url.Values{
