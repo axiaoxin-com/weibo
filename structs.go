@@ -181,7 +181,7 @@ type ssoLoginResp struct {
 type TokenResp struct {
 	ErrorResp
 	AccessToken string `json:"access_token"` // access token
-	ExpiresIn   int64  `json:"expires_in"`   // ExpiresIn 秒之后token过期
+	ExpiresIn   int64  `json:"expires_in"`   // ExpiresIn 秒之后 token 过期
 	UID         string `json:"uid"`
 	IsRealName  string `json:"isRealName"`
 }
@@ -196,7 +196,7 @@ type TokenInfoResp struct {
 	ExpireIn string `json:"expire_in"`
 }
 
-// EmotionsResp Emotions接口返回结果
+// EmotionsResp Emotions 接口返回结果
 type EmotionsResp []struct {
 	Category string      `json:"category"`
 	Common   bool        `json:"common"`
@@ -298,7 +298,7 @@ type CommentsByMeResp struct {
 	TotalNumber    int `json:"total_number"`
 }
 
-// CommentsDestroyBatchResp CommentsDestroyBatch接口返回结构
+// CommentsDestroyBatchResp CommentsDestroyBatch 接口返回结构
 type CommentsDestroyBatchResp []struct {
 	CreatedAt string `json:"created_at"`
 	ID        int64  `json:"id"`
@@ -381,7 +381,7 @@ type CommentsDestroyBatchResp []struct {
 	} `json:"status"`
 }
 
-// CommentsCreateResp CommentsCreate接口返回结构
+// CommentsCreateResp CommentsCreate 接口返回结构
 type CommentsCreateResp struct {
 	ErrorResp
 	CreatedAt string `json:"created_at"`
@@ -465,7 +465,7 @@ type CommentsCreateResp struct {
 	} `json:"status"`
 }
 
-// StatusesHomeTimelineResp StatusesHomeTimeline接口返回结构
+// StatusesHomeTimelineResp StatusesHomeTimeline 接口返回结构
 type StatusesHomeTimelineResp struct {
 	ErrorResp
 	Statuses []struct {
@@ -520,4 +520,124 @@ type StatusesHomeTimelineResp struct {
 	PreviousCursor int   `json:"previous_cursor"`
 	NextCursor     int64 `json:"next_cursor"`
 	TotalNumber    int   `json:"total_number"`
+}
+
+// CommentsReplyResp CommentsReply 接口返回结果
+type CommentsReplyResp struct {
+	ErrorResp
+	CreatedAt    string `json:"created_at"`
+	ID           int64  `json:"id"`
+	Text         string `json:"text"`
+	Source       string `json:"source"`
+	Mid          string `json:"mid"`
+	ReplyComment struct {
+		CreatedAt string `json:"created_at"`
+		ID        int64  `json:"id"`
+		Text      string `json:"text"`
+		Source    string `json:"source"`
+		Mid       string `json:"mid"`
+		User      struct {
+			ID               int    `json:"id"`
+			ScreenName       string `json:"screen_name"`
+			Name             string `json:"name"`
+			Province         string `json:"province"`
+			City             string `json:"city"`
+			Location         string `json:"location"`
+			Description      string `json:"description"`
+			URL              string `json:"url"`
+			ProfileImageURL  string `json:"profile_image_url"`
+			Domain           string `json:"domain"`
+			Gender           string `json:"gender"`
+			FollowersCount   int    `json:"followers_count"`
+			FriendsCount     int    `json:"friends_count"`
+			StatusesCount    int    `json:"statuses_count"`
+			FavouritesCount  int    `json:"favourites_count"`
+			CreatedAt        string `json:"created_at"`
+			Following        bool   `json:"following"`
+			AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+			Remark           string `json:"remark"`
+			GeoEnabled       bool   `json:"geo_enabled"`
+			Verified         bool   `json:"verified"`
+			AllowAllComment  bool   `json:"allow_all_comment"`
+			AvatarLarge      string `json:"avatar_large"`
+			VerifiedReason   string `json:"verified_reason"`
+			FollowMe         bool   `json:"follow_me"`
+			OnlineStatus     int    `json:"online_status"`
+			BiFollowersCount int    `json:"bi_followers_count"`
+		} `json:"user"`
+	} `json:"reply_comment"`
+	User struct {
+		ID               int    `json:"id"`
+		ScreenName       string `json:"screen_name"`
+		Name             string `json:"name"`
+		Province         string `json:"province"`
+		City             string `json:"city"`
+		Location         string `json:"location"`
+		Description      string `json:"description"`
+		URL              string `json:"url"`
+		ProfileImageURL  string `json:"profile_image_url"`
+		Domain           string `json:"domain"`
+		Gender           string `json:"gender"`
+		FollowersCount   int    `json:"followers_count"`
+		FriendsCount     int    `json:"friends_count"`
+		StatusesCount    int    `json:"statuses_count"`
+		FavouritesCount  int    `json:"favourites_count"`
+		CreatedAt        string `json:"created_at"`
+		Following        bool   `json:"following"`
+		AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+		Remark           string `json:"remark"`
+		GeoEnabled       bool   `json:"geo_enabled"`
+		Verified         bool   `json:"verified"`
+		AllowAllComment  bool   `json:"allow_all_comment"`
+		AvatarLarge      string `json:"avatar_large"`
+		VerifiedReason   string `json:"verified_reason"`
+		FollowMe         bool   `json:"follow_me"`
+		OnlineStatus     int    `json:"online_status"`
+		BiFollowersCount int    `json:"bi_followers_count"`
+	} `json:"user"`
+	Status struct {
+		CreatedAt           string        `json:"created_at"`
+		ID                  int64         `json:"id"`
+		Text                string        `json:"text"`
+		Source              string        `json:"source"`
+		Favorited           bool          `json:"favorited"`
+		Truncated           bool          `json:"truncated"`
+		InReplyToStatusID   string        `json:"in_reply_to_status_id"`
+		InReplyToUserID     string        `json:"in_reply_to_user_id"`
+		InReplyToScreenName string        `json:"in_reply_to_screen_name"`
+		Geo                 interface{}   `json:"geo"`
+		Mid                 string        `json:"mid"`
+		RepostsCount        int           `json:"reposts_count"`
+		CommentsCount       int           `json:"comments_count"`
+		Annotations         []interface{} `json:"annotations"`
+		User                struct {
+			ID               int    `json:"id"`
+			ScreenName       string `json:"screen_name"`
+			Name             string `json:"name"`
+			Province         string `json:"province"`
+			City             string `json:"city"`
+			Location         string `json:"location"`
+			Description      string `json:"description"`
+			URL              string `json:"url"`
+			ProfileImageURL  string `json:"profile_image_url"`
+			Domain           string `json:"domain"`
+			Gender           string `json:"gender"`
+			FollowersCount   int    `json:"followers_count"`
+			FriendsCount     int    `json:"friends_count"`
+			StatusesCount    int    `json:"statuses_count"`
+			FavouritesCount  int    `json:"favourites_count"`
+			CreatedAt        string `json:"created_at"`
+			Following        bool   `json:"following"`
+			AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+			Remark           string `json:"remark"`
+			GeoEnabled       bool   `json:"geo_enabled"`
+			Verified         bool   `json:"verified"`
+			AllowAllComment  bool   `json:"allow_all_comment"`
+			AvatarLarge      string `json:"avatar_large"`
+			VerifiedReason   string `json:"verified_reason"`
+			FollowMe         bool   `json:"follow_me"`
+			OnlineStatus     int    `json:"online_status"`
+			BiFollowersCount int    `json:"bi_followers_count"`
+		} `json:"user"`
+	} `json:"status"`
 }
