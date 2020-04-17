@@ -2,7 +2,7 @@
 
 新浪微博 Golang 版 SDK
 
-微博API: <https://open.weibo.com/wiki/微博API>
+微博 API: <https://open.weibo.com/wiki/微博API>
 
 ## 功能
 
@@ -15,12 +15,17 @@
 - [获取 Access Token](https://github.com/axiaoxin-com/weibo/blob/master/access_token.go)
 - [查询 Access Token 信息](https://github.com/axiaoxin-com/weibo/blob/master/get_token_info.go)
 - [分享一条链接到微博（发微博）](https://github.com/axiaoxin-com/weibo/blob/master/statuses_share.go)
+- [获取当前登录用户所发出的评论列表](https://github.com/axiaoxin-com/weibo/blob/master/comments_by_me.go)
+- [对一条微博进行评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_create.go)
+- [根据评论 ID 批量删除评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_destroy_batch.go)
+- [获取微博官方表情的详细信息](https://github.com/axiaoxin-com/weibo/blob/master/emotions.go)
+- [获取当前登录用户及其所关注（授权）用户的最新微博](https://github.com/axiaoxin-com/weibo/blob/master/statuses_home_timeline.go)
 
 ## 亮点
 
-#### 模拟微博登录自动获取授权码并取得token
+#### 模拟微博登录自动获取授权码并取得 token
 
-使用账号密码模拟登录微博后获取授权码，从url中取得授权码后再获取token，过程中无需人工干预。
+使用账号密码模拟登录微博后获取授权码，从 url 中取得授权码后再获取 token ，过程中无需人工干预。
 
 #### 支持登录时验证码识别
 
@@ -82,7 +87,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 获取access token
+	// 获取 access token
 	token, err := weibo.AccessToken(code)
 	if err != nil {
 		log.Fatal(err)
@@ -138,7 +143,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 获取access token
+	// 获取 access token
 	token, err := weibo.AccessToken(code)
 	if err != nil {
 		log.Fatal(err)
@@ -146,7 +151,7 @@ func main() {
 
 	// 发送微博，必须带有安全域名链接
 	status := fmt.Sprintf("文字带图片示例 http://%s", securitydomain)
-	// 加载要发送的图片，加载方式只要是返回io.Reader都可以
+	// 加载要发送的图片，加载方式只要是返回 io.Reader 都可以
 	pic, err := os.Open("./pic.jpg")
 	if err != nil {
 		log.Fatal(err)
@@ -168,7 +173,7 @@ func main() {
 // 注册验证码破解函数示例
 // 登录遇到验证码时
 // 如果有注册你自己的破解函数则会尝试使用你注册的函数进行验证码破解
-// 破解失败则采用默认的人工手动处理的方式手工输入保存在临时目录中的weibo_pin.png中的验证码
+// 破解失败则采用默认的人工手动处理的方式手工输入保存在临时目录中的 weibo_pin.png 中的验证码
 
 package main
 
@@ -205,7 +210,7 @@ func main() {
 	// 将破解函数注册到微博客户端
 	// 破解函数的声明为 func(io.Reader) (string, error)，只要符合此签名的函数就可以注册
 	// RegisterCrackPinFunc 可以传入多个破解函数，会逐个尝试
-	// 这里的Cr4ck即为chaojiying中的破解函数
+	// 这里的 Cr4ck 即为 chaojiying 中的破解函数
 	weibo.RegisterCrackPinFunc(cracker.Cr4ck)
 	fmt.Println("验证码破解方法注册成功")
 
@@ -220,7 +225,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 获取access token
+	// 获取 access token
 	token, err := weibo.AccessToken(code)
 	if err != nil {
 		log.Fatal(err)
@@ -241,7 +246,7 @@ func main() {
 #### 模拟登录
 
 要想代码层面直接获取到授权码，必须要在微博应用的授权页面进行模拟浏览器登录。
-登录参数会被js代码处理，需要翻译对应的 js 代码为 go ，crypto 包不熟，这里花了一些时间。
+登录参数会被 js 代码处理，需要翻译对应的 js 代码为 go ， crypto 包不熟，这里花了一些时间。
 
 #### 如何处理模拟登录时遇到的验证码
 
