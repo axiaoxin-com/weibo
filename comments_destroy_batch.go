@@ -1,7 +1,7 @@
 // https://open.weibo.com/wiki/2/comments/destroy_batch
 // 请求参数
-//   access_token	true	string	采用OAuth授权方式为必填参数，OAuth授权后获得。
-//   cids	true	int64	需要删除的评论ID，用半角逗号隔开，最多20个。
+//   access_token	true	string	采用 OAuth 授权方式为必填参数， OAuth 授权后获得。
+//   cids	true	int64	需要删除的评论 ID ，用半角逗号隔开，最多 20 个。
 
 package weibo
 
@@ -16,8 +16,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// CommentsDestroyBatch 根据评论ID批量删除评论
-// cids 需要删除的评论ID
+// CommentsDestroyBatch 根据评论 ID 批量删除评论
+// cids 需要删除的评论 ID
 func (w *Weibo) CommentsDestroyBatch(token string, cids ...int64) (*CommentsDestroyBatchResp, error) {
 	apiURL := "https://api.weibo.com/2/comments/destroy_batch.json"
 	sCids := []string{}

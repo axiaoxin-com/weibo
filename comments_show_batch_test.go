@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCommentsReply(t *testing.T) {
+func TestCommentsShowBatch(t *testing.T) {
 	appkey := os.Getenv("weibo_app_key")
 	appsecret := os.Getenv("weibo_app_secret")
 	username := os.Getenv("weibo_username")
@@ -27,19 +27,20 @@ func TestCommentsReply(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c, err := weibo.CommentsByMe(token.AccessToken, 0, 0, 1, 1, 0)
+	c, err := weibo.CommentsByMe(token.AccessToken, 0, 0, 10, 1, 0)
 	if err != nil {
 		t.Fatal("CommentsByMe err:", err)
 	}
-	t.Logf("%+v", c)
-	cid := c.Comments[0].ID
-	id := c.Comments[0].Status.ID
-	resp, err := weibo.CommentsReply(token.AccessToken, cid, id, "爱老虎油", 0, 1)
+	cids := []int64{}
+	for _, i := range c.Comments {
+		cids = append(cids, i.ID)
+	}
+	resp, err := weibo.CommentsShowBatch(token.AccessToken, cids...)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Logf("%+v", resp)
-	if resp.ID == 0 {
-		t.Error("reply comments failed")
+	if len(*resp) != len(cids) {
+		t.Error("Comments len error")
 	}
 }

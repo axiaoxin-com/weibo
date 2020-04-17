@@ -21,6 +21,7 @@
 - [获取微博官方表情的详细信息](https://github.com/axiaoxin-com/weibo/blob/master/emotions.go)
 - [获取当前登录用户及其所关注（授权）用户的最新微博](https://github.com/axiaoxin-com/weibo/blob/master/statuses_home_timeline.go)
 - [回复一条评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_reply.go)
+- [根据评论ID批量返回评论信息](https://github.com/axiaoxin-com/weibo/blob/master/comments_show_batch.go)
 
 ## 亮点
 
