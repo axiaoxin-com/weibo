@@ -27,12 +27,12 @@ import (
 // baseApp 是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用）
 // feature 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐0。
 // trim_user 返回值中user字段开关，0：返回完整user字段、1：user字段仅返回user_id。
-func (w *Weibo) StatusesHomeTimeline(token string, sinceID, maxID, count, page, baseApp, feature, trimUser int) (*StatusesHomeTimelineResp, error) {
+func (w *Weibo) StatusesHomeTimeline(token string, sinceID, maxID int64, count, page, baseApp, feature, trimUser int) (*StatusesHomeTimelineResp, error) {
 	apiURL := "https://api.weibo.com/2/statuses/home_timeline.json"
 	data := url.Values{
 		"access_token": {token},
-		"since_id":     {strconv.Itoa(sinceID)},
-		"max_id":       {strconv.Itoa(maxID)},
+		"since_id":     {strconv.FormatInt(sinceID, 10)},
+		"max_id":       {strconv.FormatInt(maxID, 10)},
 		"count":        {strconv.Itoa(count)},
 		"page":         {strconv.Itoa(page)},
 		"base_app":     {strconv.Itoa(baseApp)},

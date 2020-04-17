@@ -27,8 +27,8 @@ func TestStatusesHomeTimeline(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sinceID := 0
-	maxID := 0
+	sinceID := int64(0)
+	maxID := int64(0)
 	count := 1
 	page := 1
 	baseApp := 0

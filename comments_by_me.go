@@ -35,12 +35,12 @@ import (
 // count 单页返回的记录条数
 // page 返回结果的页码
 // filterBySource 来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论
-func (w *Weibo) CommentsByMe(token string, sinceID, maxID, count, page, filterBySource int) (*CommentsByMeResp, error) {
+func (w *Weibo) CommentsByMe(token string, sinceID, maxID int64, count, page, filterBySource int) (*CommentsByMeResp, error) {
 	apiURL := "https://api.weibo.com/2/comments/by_me.json"
 	data := url.Values{
 		"access_token":     {token},
-		"since_id":         {strconv.Itoa(sinceID)},
-		"max_id":           {strconv.Itoa(maxID)},
+		"since_id":         {strconv.FormatInt(sinceID, 10)},
+		"max_id":           {strconv.FormatInt(maxID, 10)},
 		"count":            {strconv.Itoa(count)},
 		"page":             {strconv.Itoa(page)},
 		"filter_by_source": {strconv.Itoa(filterBySource)},
