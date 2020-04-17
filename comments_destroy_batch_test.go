@@ -32,9 +32,9 @@ func TestCommentsDestroyBatch(t *testing.T) {
 		t.Fatal("StatusesHomeTimeline err:", err)
 	}
 	weiboID := tl.Statuses[0].ID
-	cr, err := weibo.CommentsCreate(token.AccessToken, "爱老虎油", weiboID, 1)
+	cr, err := weibo.CommentsCreate(token.AccessToken, "爱老虎油"+string(RandInt(0, 100)), weiboID, 1)
 	if err != nil {
-		t.Fatal("StatusesHomeTimeline err:", err)
+		t.Fatal("CommentsCreate err:", err)
 	}
 	resp, err := weibo.CommentsDestroyBatch(token.AccessToken, cr.ID)
 	if err != nil {
