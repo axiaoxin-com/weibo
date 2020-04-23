@@ -24,6 +24,7 @@
 - [根据评论 ID 批量返回评论信息](https://github.com/axiaoxin-com/weibo/blob/master/comments_show_batch.go)
 - [获取某个用户最新发表的微博列表](https://github.com/axiaoxin-com/weibo/blob/master/statuses_user_timeline.go)
 - [根据 ID 跳转到单条微博页](https://github.com/axiaoxin-com/weibo/blob/master/statuses_go.go)
+- [批量获取指定微博的转发数评论数](https://github.com/axiaoxin-com/weibo/blob/master/statuses_count.go)
 
 ## 亮点
 

@@ -777,3 +777,17 @@ type StatusesUserTimelineResp struct {
 	NextCursor     int64 `json:"next_cursor"`
 	TotalNumber    int   `json:"total_number"`
 }
+
+// StatusesCountResp StatusesCount 接口返回结构
+type StatusesCountResp []struct {
+	ID                    int64  `json:"id"`
+	Idstr                 string `json:"idstr"`
+	Comments              int    `json:"comments"`
+	Reposts               int    `json:"reposts"`
+	Attitudes             int    `json:"attitudes"`
+	NumberDisplayStrategy struct {
+		ApplyScenarioFlag    int    `json:"apply_scenario_flag"`
+		DisplayTextMinNumber int    `json:"display_text_min_number"`
+		DisplayText          string `json:"display_text"`
+	} `json:"number_display_strategy"`
+}
