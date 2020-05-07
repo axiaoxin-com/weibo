@@ -42,8 +42,6 @@ func (w *Weibo) StatusesUserTimeline(token string, uid int64, screenName string,
 	apiURL := "https://api.weibo.com/2/statuses/user_timeline.json"
 	data := url.Values{
 		"access_token": {token},
-		"uid":          {strconv.FormatInt(uid, 10)},
-		"screen_name":  {screenName},
 		"since_id":     {strconv.FormatInt(sinceID, 10)},
 		"max_id":       {strconv.FormatInt(maxID, 10)},
 		"count":        {strconv.Itoa(count)},
@@ -51,6 +49,12 @@ func (w *Weibo) StatusesUserTimeline(token string, uid int64, screenName string,
 		"base_app":     {strconv.Itoa(baseApp)},
 		"feature":      {strconv.Itoa(feature)},
 		"trim_user":    {strconv.Itoa(trimUser)},
+	}
+	if uid != 0 {
+		data.Add("uid", strconv.FormatInt(uid, 10))
+	}
+	if screenName != "" {
+		data.Add("screen_name", screenName)
 	}
 	req, err := http.NewRequest(http.MethodGet, apiURL, nil)
 	if err != nil {
