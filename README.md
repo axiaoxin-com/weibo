@@ -27,6 +27,7 @@
 - [批量获取指定微博的转发数评论数](https://github.com/axiaoxin-com/weibo/blob/master/statuses_count.go)
 - [根据用户 ID 获取用户信息](https://github.com/axiaoxin-com/weibo/blob/master/users_show.go)
 - [获取最新的提到登录用户的微博列表，即 @ 我的微博](https://github.com/axiaoxin-com/weibo/blob/master/statuses_mentions.go)
+- [根据微博 ID 返回某条微博的评论列表](https://github.com/axiaoxin-com/weibo/blob/master/comments_show.go)
 
 ## 亮点
 
