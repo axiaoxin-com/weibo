@@ -3,12 +3,13 @@
 package weibo
 
 import (
-	"log"
 	"math/rand"
 	"net"
 	"os/exec"
 	"runtime"
 	"time"
+
+	"github.com/axiaoxin-com/logging"
 )
 
 // UserAgents 模拟登录时随机选择其中的 User-Agent 设置请求头
@@ -35,7 +36,7 @@ func RealIP() string {
 	ip := ""
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		log.Println("[WARN] get ip error:" + err.Error())
+		logging.Warn(nil, "get ip failed:"+err.Error())
 		return ip
 	}
 

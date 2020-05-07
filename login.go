@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -22,7 +21,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/axiaoxin-com/logging"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 // MobileLogin 模拟移动端登录微博
@@ -230,7 +231,7 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 					pinCode, err = crack(pinPic)
 					// 破解失败尝试使用下一个crack
 					if err != nil {
-						log.Println("[ERROR] weibo PCLogin crack pin error:" + err.Error())
+						logging.Error(nil, "weibo PCLogin crack pin error", zap.Error(err))
 						continue
 					}
 					// 破解成功推出破解循环
@@ -241,7 +242,7 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 			}
 			// 破解失败，人工处理
 			if err != nil || pinCode == "" {
-				log.Println("无法自动处理登录验证码，需人工处理. ")
+				fmt.Println("无法自动处理登录验证码，需人工处理. ")
 				// 没有注册破解方法时，保存图片,用户人工识别
 				pinFilename := path.Join(os.TempDir(), "weibo_pin.png")
 				pinFile, err := os.Create(pinFilename)
@@ -255,15 +256,15 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 				}
 				// 尝试直接打开图片
 				if err := TerminalOpen(pinFilename); err != nil {
-					log.Println("[ERROR] weibo TerminalOpen error", err)
+					logging.Error(nil, "weibo TerminalOpen error", zap.Error(err))
 				}
 
 				// 等待用户输入验证码
-				log.Printf("请输入 %s 中的验证码:", pinFilename)
+				fmt.Printf("请输入 %s 中的验证码:", pinFilename)
 				if _, err := fmt.Scanln(&pinCode); err != nil {
 					return errors.Wrap(err, "weibo Scanln pinCode error")
 				}
-				log.Printf("正在登录...")
+				fmt.Println("正在登录...")
 			}
 		}
 

@@ -21,11 +21,11 @@ package weibo
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
 
+	"github.com/axiaoxin-com/logging"
 	"github.com/pkg/errors"
 )
 
@@ -33,7 +33,7 @@ import (
 func (w *Weibo) Authorize() (string, error) {
 	authURL := "https://api.weibo.com/oauth2/authorize"
 	referer := fmt.Sprintf("%s?client_id=%s&redirect_uri=%s", authURL, w.appkey, w.redirecturi)
-	log.Println("[DEBUG] weibo Authorize referer:", referer)
+	logging.Debugs(nil, "weibo Authorize referer:", referer)
 	data := url.Values{
 		"client_id":       {w.appkey},
 		"response_type":   {"code"},
