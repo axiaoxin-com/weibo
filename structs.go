@@ -1173,3 +1173,12 @@ type UsersDomainShowResp struct {
 	OnlineStatus     int    `json:"online_status"`
 	BiFollowersCount int    `json:"bi_followers_count"`
 }
+
+// SummaryResp Summary 返回结构
+type SummaryResp struct {
+	Rank    string
+	Keyword string
+	Heat    string
+	Tag     string
+	URL     string
+}
