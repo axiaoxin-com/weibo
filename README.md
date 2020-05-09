@@ -16,6 +16,7 @@
 - [查询 Access Token 信息](https://github.com/axiaoxin-com/weibo/blob/master/get_token_info.go)
 - [分享一条链接到微博（发微博）](https://github.com/axiaoxin-com/weibo/blob/master/statuses_share.go)
 - [获取当前登录用户所发出的评论列表](https://github.com/axiaoxin-com/weibo/blob/master/comments_by_me.go)
+- [获取当前登录用户所收到的评论列表](https://github.com/axiaoxin-com/weibo/blob/master/comments_to_me.go)
 - [对一条微博进行评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_create.go)
 - [根据评论 ID 批量删除评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_destroy_batch.go)
 - [获取微博官方表情的详细信息](https://github.com/axiaoxin-com/weibo/blob/master/emotions.go)
