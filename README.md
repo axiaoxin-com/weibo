@@ -30,6 +30,7 @@
 - [根据微博 ID 返回某条微博的评论列表](https://github.com/axiaoxin-com/weibo/blob/master/comments_show.go)
 - [根据微博 ID 获取单条微博内容](https://github.com/axiaoxin-com/weibo/blob/master/statuses_show.go)
 - [获取指定微博的转发微博列表](https://github.com/axiaoxin-com/weibo/blob/master/statuses_repost_timeline.go)
+- [通过个性化域名获取用户资料以及用户最新的一条微博](https://github.com/axiaoxin-com/weibo/blob/master/users_domain_show.go)
 
 ## 亮点
 
