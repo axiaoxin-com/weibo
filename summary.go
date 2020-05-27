@@ -1,5 +1,3 @@
-// 登录接口
-
 package weibo
 
 import (
@@ -26,8 +24,8 @@ func findResult(dom *goquery.Document) []SummaryResp {
 	return result
 }
 
-// Summary 微博搜索
-// pkg 级别的搜索，未登录，无法获取好友搜列表，热搜榜和要闻榜正常
+// Summary 微博热搜
+// pkg 级别的热搜，未登录，无法获取好友搜列表，热搜榜和要闻榜正常
 func Summary(param string) ([]SummaryResp, error) {
 	URL := "https://s.weibo.com/top/summary/summary?" + param
 	dom, err := goquery.NewDocument(URL)
@@ -37,7 +35,7 @@ func Summary(param string) ([]SummaryResp, error) {
 	return findResult(dom), nil
 }
 
-// Summary 微博搜索 for client
+// Summary 微博热搜 for client
 // param:
 //   cate=realtimehot 热搜榜
 //   cate=socialevent 要闻榜
