@@ -34,8 +34,9 @@
 - [通过个性化域名获取用户资料以及用户最新的一条微博](https://github.com/axiaoxin-com/weibo/blob/master/users_domain_show.go)
 - [获取当前登录用户的最新评论包括接收到的与发出的评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_timeline.go)
 - [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
+- [微博（高级）搜索](https://github.com/axiaoxin-com/weibo/blob/master/search.go)
 
-## 亮点
+## 特性
 
 #### 模拟微博登录自动获取授权码并取得 token
 
@@ -48,6 +49,8 @@
 支持注册破解验证码的函数，注册后触发验证码时，优先使用注册的函数识别验证码，如果识别失败则仍然采用提示用户手动输入。
 
 破解函数的声明为 `func(io.Reader) (string, error)` ，只要符合此签名的函数就可以调用 `RegisterCrackPinFunc` 方法注册。`RegisterCrackPinFunc` 可以传入多个破解函数，会逐个尝试。
+
+#### 除官方提供的 API 外，还提供解析 HTML 类型的接口封装，如微博热搜，微博搜索、微博电影榜、微博发现等接口
 
 ## 安装
 
@@ -255,7 +258,9 @@ func main() {
 }
 ```
 
-## 难点
+#### 更多 API 用法请参考单元测试
+
+## 开发难点
 
 #### 模拟登录
 
@@ -274,6 +279,9 @@ func main() {
 在调研后发现有超级鹰等类似的验证码识别平台，提供 http 接口破解验证码，于是实现了注册破解函数的模式。
 用户可以实现自己的破解方法，只需按约定的出入参数实现即可，注册后当遇到验证码会自动调用处理，失败时再使用人工识别手动输入的方案兜底。
 
+#### 解析 HTML 时未登录状态和已登录状态操作不一样，不难但很繁杂
+
+比如微博搜索，未登录和已登录状态下都可以搜索，但是可操作的按钮结果不同，无法使用高级搜索等，对应的解析也不同
 
 ## 遇到的问题
 
