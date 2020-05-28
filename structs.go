@@ -1182,3 +1182,30 @@ type SummaryResp struct {
 	Tag     string
 	URL     string
 }
+
+// User 微博 html 解析出的用户对象
+type User struct {
+	NickName  string // 微博名
+	HomePage  string // 微博主页 URL 地址
+	AvatorURL string // 头像 URL 地址
+}
+
+// Status 微博 html 解析出的微博对象
+type Status struct {
+	Content      string   // 微博文本内容
+	PicURLs      []string // 微博图片链接
+	PostTime     string   // 微博发送时间
+	Source       string   // 微博发送来源
+	RepostCount  int      // 转发数
+	CommentCount int      // 评论数
+	LikeCount    int      // 点赞数
+}
+
+// SearchResult 微博搜索结果结构
+type SearchResult struct {
+	User   User
+	Status struct {
+		Origin  Status // 带有搜索结果的原始微博
+		Forward Status // 原始微博带有的转发微博
+	}
+}

@@ -33,7 +33,7 @@
 - [获取指定微博的转发微博列表](https://github.com/axiaoxin-com/weibo/blob/master/statuses_repost_timeline.go)
 - [通过个性化域名获取用户资料以及用户最新的一条微博](https://github.com/axiaoxin-com/weibo/blob/master/users_domain_show.go)
 - [获取当前登录用户的最新评论包括接收到的与发出的评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_timeline.go)
-- [微博搜索：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
+- [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
 
 ## 亮点
 
