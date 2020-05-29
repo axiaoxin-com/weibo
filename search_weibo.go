@@ -10,12 +10,14 @@ package weibo
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/axiaoxin-com/logging"
 	"github.com/pkg/errors"
 )
 
@@ -162,13 +164,13 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 			forwardLikeCount, _ = strconv.Atoi(forwardLike)
 		}
 		result.Status.Forward.LikeCount = forwardLikeCount
-		fmt.Printf("--------->%d:%+v\n\n", i, result)
+		logging.Debugf(nil, "--> %d: %+v", i, result)
 		results = append(results, result)
 	})
 	return results
 }
 
-// 出来微博来源不统一的问题
+// 处理微博来源不统一的问题
 func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 	html, _ := s.Html()
 
@@ -212,6 +214,102 @@ func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 	return
 }
 
+// SearchWeiboCondition 高级搜索筛选条件
+type SearchWeiboCondition struct {
+	Result string // 保存最后结果
+}
+
+// String 转化为 url 参数
+func (c *SearchWeiboCondition) String() string {
+	return c.Result
+}
+
+// TypeAll 设置微博搜索类型为 全部
+func (c *SearchWeiboCondition) TypeAll() *SearchWeiboCondition {
+	c.Result += "&typeall=1"
+	return c
+}
+
+// TypeHot 设置微博搜索类型为 热门
+func (c *SearchWeiboCondition) TypeHot() *SearchWeiboCondition {
+	c.Result += "&xsort=hot"
+	return c
+}
+
+// TypeOri 设置微博搜索类型为 原创
+func (c *SearchWeiboCondition) TypeOri() *SearchWeiboCondition {
+	c.Result += "&scope=ori"
+	return c
+}
+
+// TypeAtten 设置微博搜索类型为 关注人
+func (c *SearchWeiboCondition) TypeAtten() *SearchWeiboCondition {
+	c.Result += "&atten=1"
+	return c
+}
+
+// TypeVip 设置微博搜索类型为 认证用户
+func (c *SearchWeiboCondition) TypeVip() *SearchWeiboCondition {
+	c.Result += "&vip=1"
+	return c
+}
+
+// TypeCategory 设置微博搜索类型为 认证用户
+func (c *SearchWeiboCondition) TypeCategory() *SearchWeiboCondition {
+	c.Result += "&category=4"
+	return c
+}
+
+// TypeViewpoint 设置微博搜索类型为 认证用户
+func (c *SearchWeiboCondition) TypeViewpoint() *SearchWeiboCondition {
+	c.Result += "&viewpoint=1"
+	return c
+}
+
+// ContainAll 设置包含条件为 全部
+func (c *SearchWeiboCondition) ContainAll() *SearchWeiboCondition {
+	c.Result += "&suball=1"
+	return c
+}
+
+// ContainPic 设置包含条件为 包含图片
+func (c *SearchWeiboCondition) ContainPic() *SearchWeiboCondition {
+	c.Result += "&haspic=1"
+	return c
+}
+
+// ContainVideo 设置包含条件为 包含视频
+func (c *SearchWeiboCondition) ContainVideo() *SearchWeiboCondition {
+	c.Result += "&hasvideo=1"
+	return c
+}
+
+// ContainMusic 设置包含条件为 包含音乐
+func (c *SearchWeiboCondition) ContainMusic() *SearchWeiboCondition {
+	c.Result += "&hasmusic=1"
+	return c
+}
+
+// ContainLink 设置包含条件为 包含短链
+func (c *SearchWeiboCondition) ContainLink() *SearchWeiboCondition {
+	c.Result += "&haslink=1"
+	return c
+}
+
+// TimeScope 设置起止时间范围
+// 时间格式：2020-05-01-18 Y-m-d-H
+func (c *SearchWeiboCondition) TimeScope(begin, end string) *SearchWeiboCondition {
+	c.Result += ("&timescope=custom:" + begin + ":" + end)
+	return c
+}
+
+// Region 设置地点范围，传入中文
+func (c *SearchWeiboCondition) Region(prov, city string) *SearchWeiboCondition {
+	code := GetSearchRegionCode(prov, city)
+	c.Result += ("&region=custom:" + code)
+	return c
+}
+
 // SearchWeibo 微博综合搜索
 // pkg 级别的搜索，未登录，无法使用高级搜索，搜索内容有限,只能看评论、转发、点赞的数量
 func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
@@ -224,21 +322,21 @@ func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
 }
 
 // SearchWeibo 微博综合搜索（登录状态）
-// 支持分页
+// 支持分页，翻页时不要太快，否则会跳转安全验证页面
 // 支持高级搜索
 func (w *Weibo) SearchWeibo(keyword string, page int, condition *SearchWeiboCondition) ([]SearchWeiboResult, error) {
-	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d&%s", keyword, page, condition.String())
-	dom, err := goquery.NewDocument(URL)
+	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d%s", keyword, page, condition.String())
+	logging.Debugs(nil, "weibo SearchWeibo URL:", URL)
+	resp, err := w.client.Get(URL)
 	if err != nil {
-		return nil, errors.Wrap(err, "Search NewDocument error")
+		return nil, errors.Wrap(err, "weibo SearchWeibo Get error")
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("weibo SearchWeibo resp.Status=" + resp.Status)
+	}
+	dom, err := goquery.NewDocumentFromResponse(resp)
+	if err != nil {
+		return nil, errors.Wrap(err, "weibo SearchWeibo NewDocumentFromResponse error")
 	}
 	return parseSearchWeiboResult(dom), nil
-}
-
-// SearchWeiboCondition 微博搜索筛选条件
-type SearchWeiboCondition struct {
-}
-
-func (c *SearchWeiboCondition) String() string {
-	return ""
 }

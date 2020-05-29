@@ -50,7 +50,7 @@
 
 破解函数的声明为 `func(io.Reader) (string, error)` ，只要符合此签名的函数就可以调用 `RegisterCrackPinFunc` 方法注册。`RegisterCrackPinFunc` 可以传入多个破解函数，会逐个尝试。
 
-#### 除官方提供的 API 外，还提供解析 HTML 类型的接口封装，如微博热搜，微博搜索、微博电影榜、微博发现等接口
+#### 除官方提供的 API 外，还提供解析 HTML 类型的接口封装，如微博热搜，微博搜索、微博电影榜、微博发现等接口，只需登录无需授权获取 AccessToken
 
 ## 安装
 
