@@ -1205,8 +1205,8 @@ type Status struct {
 	}
 }
 
-// SearchResult 微博搜索结果结构
-type SearchResult struct {
+// SearchWeiboResult 微博搜索结果结构
+type SearchWeiboResult struct {
 	User   User
 	Status struct {
 		Origin  Status // 带有搜索结果的原始微博

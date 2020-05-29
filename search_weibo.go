@@ -20,10 +20,10 @@ import (
 )
 
 // 解析搜索结果
-func parseSearchResult(dom *goquery.Document) []SearchResult {
-	results := []SearchResult{}
+func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
+	results := []SearchWeiboResult{}
 	dom.Find("#pl_feedlist_index .card").Each(func(i int, s *goquery.Selection) {
-		result := SearchResult{}
+		result := SearchWeiboResult{}
 
 		// 获取用户 URL
 		homePage, _ := s.Find(".avator a").Attr("href")
@@ -212,25 +212,33 @@ func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 	return
 }
 
-// Search 微博搜索
+// SearchWeibo 微博综合搜索
 // pkg 级别的搜索，未登录，无法使用高级搜索，搜索内容有限,只能看评论、转发、点赞的数量
-func Search(keyword string) ([]SearchResult, error) {
+func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
 	URL := "https://s.weibo.com/weibo?q=" + keyword
 	dom, err := goquery.NewDocument(URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "Search NewDocument error")
 	}
-	return parseSearchResult(dom), nil
+	return parseSearchWeiboResult(dom), nil
 }
 
-// Search 微博搜索（登录状态）
+// SearchWeibo 微博综合搜索（登录状态）
 // 支持分页
 // 支持高级搜索
-func (w *Weibo) Search(keyword string, page int, condition *SearchCondition) ([]SearchResult, error) {
+func (w *Weibo) SearchWeibo(keyword string, page int, condition *SearchWeiboCondition) ([]SearchWeiboResult, error) {
 	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d&%s", keyword, page, condition.String())
 	dom, err := goquery.NewDocument(URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "Search NewDocument error")
 	}
-	return parseSearchResult(dom), nil
+	return parseSearchWeiboResult(dom), nil
+}
+
+// SearchWeiboCondition 微博搜索筛选条件
+type SearchWeiboCondition struct {
+}
+
+func (c *SearchWeiboCondition) String() string {
+	return ""
 }

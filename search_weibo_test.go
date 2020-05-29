@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func TestSearch(t *testing.T) {
-	results, err := Search("五月天")
+func TestSearchWeibo(t *testing.T) {
+	results, err := SearchWeibo("五月天")
 	if err != nil {
 		t.Error(err)
 	}
