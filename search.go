@@ -10,7 +10,6 @@ package weibo
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -73,13 +72,11 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			result.Status.Origin.Video.CoverURL = videoCover
 		}
 
-		// 获取微博发送时间
+		// 获取微博发送时间和来源
 		// TODO: 时间标准化 https://github.com/dataabc/weibo-search/blob/master/weibo/utils/util.py#L53
-		postTime := strings.TrimSpace(s.Find(".content>.from a:first-of-type").Text())
+		postTime, source := parseFromDom(s.Find(".content>.from"))
 		result.Status.Origin.PostTime = postTime
-
-		// 获取微博发送来源
-		result.Status.Origin.Source = strings.TrimSpace(s.Find(".content>.from a:last-of-type").Text())
+		result.Status.Origin.Source = source
 
 		// 获取微博转发数
 		repost := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(2) a").Text())
@@ -171,6 +168,50 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 	return results
 }
 
+// 出来微博来源不统一的问题
+func parseFromDom(s *goquery.Selection) (postTime string, source string) {
+	html, _ := s.Html()
+
+	// 没有来源信息的情况只返回时间
+	if !strings.Contains(html, "来自") {
+		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+		return
+	}
+
+	// 05月25日 21:26 @Mayday瑪莎 转发过  来自 微博 weibo.com
+	if strings.Contains(html, "转发过  来自") {
+		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+		return
+	}
+
+	// 05月25日 21:02 @阿信 赞过
+	if strings.Contains(html, "赞过") && !strings.Contains(html, "来自") {
+		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+		return
+	}
+
+	// 05月25日 22:05 @Mayday瑪莎 转赞过  来自 微博 weibo.com
+	if strings.Contains(html, "赞过") && strings.Contains(html, "来自") {
+		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+		return
+	}
+
+	// 8分钟前 转赞人数超过100  来自 HUAWEI P20 Pro
+	if strings.Contains(html, "转赞人数超过") {
+		sp := strings.Split(strings.TrimSpace(s.Find("a:first-of-type").Text()), "转赞人数超过")
+		postTime = strings.TrimSpace(sp[0])
+		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+		return
+	}
+
+	// 其余默认视为 15分钟前  来自 iPhone客户端
+	postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+	source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+	return
+}
+
 // Search 微博搜索
 // pkg 级别的搜索，未登录，无法使用高级搜索，搜索内容有限,只能看评论、转发、点赞的数量
 func Search(keyword string) ([]SearchResult, error) {
@@ -182,19 +223,14 @@ func Search(keyword string) ([]SearchResult, error) {
 	return parseSearchResult(dom), nil
 }
 
-// Search 微博搜索 for client
-func (w *Weibo) Search(keyword string) ([]SummaryResp, error) {
-	URL := "https://s.weibo.com/top/summary/summary?"
-	resp, err := w.client.Get(URL)
+// Search 微博搜索（登录状态）
+// 支持分页
+// 支持高级搜索
+func (w *Weibo) Search(keyword string, page int, condition *SearchCondition) ([]SearchResult, error) {
+	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d&%s", keyword, page, condition.String())
+	dom, err := goquery.NewDocument(URL)
 	if err != nil {
-		return nil, errors.Wrap(err, "weibo Summary Get error")
+		return nil, errors.Wrap(err, "Search NewDocument error")
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("weibo Summary resp.Status=" + resp.Status)
-	}
-	dom, err := goquery.NewDocumentFromResponse(resp)
-	if err != nil {
-		return nil, errors.Wrap(err, "weibo Summary NewDocumentFromResponse error")
-	}
-	return findResult(dom), nil
+	return parseSearchResult(dom), nil
 }
