@@ -1199,6 +1199,10 @@ type Status struct {
 	RepostCount  int      // 转发数
 	CommentCount int      // 评论数
 	LikeCount    int      // 点赞数
+	Video        struct {
+		URL      string // 微博视频链接
+		CoverURL string // 视频封面图片链接
+	}
 }
 
 // SearchResult 微博搜索结果结构

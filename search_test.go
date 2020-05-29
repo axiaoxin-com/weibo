@@ -5,7 +5,7 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	results, err := Search("阿小信大人")
+	results, err := Search("五月天")
 	if err != nil {
 		t.Error(err)
 	}

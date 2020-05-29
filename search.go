@@ -11,6 +11,8 @@ package weibo
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -23,20 +25,24 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 	results := []SearchResult{}
 	dom.Find("#pl_feedlist_index .card").Each(func(i int, s *goquery.Selection) {
 		result := SearchResult{}
+
 		// 获取用户 URL
 		homePage, _ := s.Find(".avator a").Attr("href")
 		if homePage != "" {
 			result.User.HomePage = "https:" + homePage
 		}
+
 		// 获取用户头像 URL
 		avatorURL, _ := s.Find(".avator a img").Attr("src")
 		result.User.AvatorURL = avatorURL
+
 		// 获取用户昵称
-		nickName := s.Find(".info div .name").Text()
-		result.User.NickName = nickName
+		result.User.NickName = s.Find(".info div .name").Text()
+
 		// 获取微博原始内容
 		content, _ := s.Find(".content>.txt").Html()
 		result.Status.Origin.Content = strings.TrimSpace(content)
+
 		// 获取微博图片链接
 		picURLs := []string{}
 		s.Find(".content>div[node-type=feed_list_media_prev] ul li").Each(func(ii int, ss *goquery.Selection) {
@@ -49,15 +55,34 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		})
 		result.Status.Origin.PicURLs = picURLs
+
+		// 获取微博视频链接：从属性参数中正则解析
+		videoActionData, _ := s.Find(".content .thumbnail .WB_video_h5").Attr("action-data")
+		if videoActionData != "" {
+			re, _ := regexp.Compile("video_src=(.+video)")
+			matched := re.FindStringSubmatch(videoActionData)
+			if len(matched) == 2 {
+				u, _ := url.QueryUnescape(matched[1])
+				result.Status.Origin.Video.URL = "https:" + u
+			}
+		}
+
+		// 获取微博视频封面链接
+		videoCover, _ := s.Find("div[node-type=fl_h5_video_pre] img").Attr("src")
+		if videoCover != "" {
+			result.Status.Origin.Video.CoverURL = videoCover
+		}
+
 		// 获取微博发送时间
 		// TODO: 时间标准化 https://github.com/dataabc/weibo-search/blob/master/weibo/utils/util.py#L53
-		postTime := s.Find(".content>.from a:first-of-type").Text()
-		result.Status.Origin.PostTime = strings.TrimSpace(postTime)
+		postTime := strings.TrimSpace(s.Find(".content>.from a:first-of-type").Text())
+		result.Status.Origin.PostTime = postTime
+
 		// 获取微博发送来源
-		source := s.Find(".content>.from a:last-of-type").Text()
-		result.Status.Origin.Source = source
+		result.Status.Origin.Source = strings.TrimSpace(s.Find(".content>.from a:last-of-type").Text())
+
 		// 获取微博转发数
-		repost := s.Find(".card-act ul li:nth-of-type(2) a").Text()
+		repost := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(2) a").Text())
 		repostCount := 0
 		if repost != "" {
 			sl := strings.Split(repost, " ")
@@ -66,8 +91,9 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		}
 		result.Status.Origin.RepostCount = repostCount
+
 		// 获取微博评论数
-		comment := s.Find(".card-act ul li:nth-of-type(3) a").Text()
+		comment := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(3) a").Text())
 		commentCount := 0
 		if comment != "" {
 			sl := strings.Split(comment, " ")
@@ -76,8 +102,9 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		}
 		result.Status.Origin.CommentCount = commentCount
+
 		// 获取微博点赞数
-		like := s.Find(".card-act ul li:nth-of-type(4) a em").Text()
+		like := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(4) a em").Text())
 		likeCount := 0
 		if like != "" {
 			likeCount, _ = strconv.Atoi(like)
@@ -87,6 +114,7 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 		// 获取微博转发内容的文本内容
 		forwardContent, _ := s.Find(".content .card-comment .con div[node-type=feed_list_forwardContent] .txt").Html()
 		result.Status.Forward.Content = strings.TrimSpace(forwardContent)
+
 		// 获取微博转发内容的图片链接
 		forwardPicURLs := []string{}
 		s.Find(".content .card-comment .con div[node-type=feed_list_media_prev] ul li").Each(func(ii int, ss *goquery.Selection) {
@@ -99,15 +127,17 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		})
 		result.Status.Forward.PicURLs = forwardPicURLs
+
 		// 获取转发微博的发送时间
 		// TODO: 时间标准化 https://github.com/dataabc/weibo-search/blob/master/weibo/utils/util.py#L53
-		forwardPostTime := s.Find(".content .card-comment .con .func .from a:first-of-type").Text()
-		result.Status.Forward.PostTime = strings.TrimSpace(forwardPostTime)
+		forwardPostTime := strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:first-of-type").Text())
+		result.Status.Forward.PostTime = forwardPostTime
+
 		// 获取转发微博的发送来源
-		forwardSource := s.Find(".content .card-comment .con .func .from a:last-of-type").Text()
-		result.Status.Forward.Source = forwardSource
+		result.Status.Forward.Source = strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:last-of-type").Text())
+
 		// 获取转发微博的转发数
-		forwardRepost := s.Find(".content .card-comment .con .func ul li:nth-of-type(1) a").Text()
+		forwardRepost := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(1) a").Text())
 		forwardRepostCount := 0
 		if forwardRepost != "" {
 			sl := strings.Split(forwardRepost, " ")
@@ -116,8 +146,9 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		}
 		result.Status.Forward.RepostCount = forwardRepostCount
+
 		// 获取转发微博的评论数
-		forwardComment := s.Find(".content .card-comment .con .func ul li:nth-of-type(2) a").Text()
+		forwardComment := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(2) a").Text())
 		forwardCommentCount := 0
 		if forwardComment != "" {
 			sl := strings.Split(forwardComment, " ")
@@ -126,8 +157,9 @@ func parseSearchResult(dom *goquery.Document) []SearchResult {
 			}
 		}
 		result.Status.Forward.CommentCount = forwardCommentCount
+
 		// 获取转发微博的点赞数
-		forwardLike := s.Find(".content .card-comment .con .func ul li:nth-of-type(3) a em").Text()
+		forwardLike := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(3) a em").Text())
 		forwardLikeCount := 0
 		if forwardLike != "" {
 			forwardLikeCount, _ = strconv.Atoi(forwardLike)
