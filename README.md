@@ -35,6 +35,7 @@
 - [获取当前登录用户的最新评论包括接收到的与发出的评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_timeline.go)
 - [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
 - [微博综合（高级）搜索](https://github.com/axiaoxin-com/weibo/blob/master/search_weibo.go)
+- [获取微博高级搜索中地点的编号](https://github.com/axiaoxin-com/weibo/blob/master/search_region.go)
 
 ## 特性
 

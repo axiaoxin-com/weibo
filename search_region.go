@@ -2,8 +2,6 @@
 
 package weibo
 
-import "fmt"
-
 // SearchRegion 微博高级搜索中的地点
 var SearchRegion = map[string]interface{}{
 	"安徽": map[string]interface{}{
@@ -645,14 +643,17 @@ var SearchRegion = map[string]interface{}{
 	},
 }
 
-// GetSearchRegionCode 获取地点 code 返回格式 prov:city
-func GetSearchRegionCode(prov, city string) string {
+// GetSearchRegionCode 获取地点 code 返回格式 prov code 和 city code
+func GetSearchRegionCode(prov, city string) (int, int) {
 	provMap := SearchRegion[prov]
 	if provMap == nil {
-		return ""
+		return 0, 1000
 	}
-	provCode := provMap.(map[string]interface{})["code"]
+	provCode := provMap.(map[string]interface{})["code"].(int)
 	cityMap := provMap.(map[string]interface{})["city"]
 	cityCode := cityMap.(map[string]interface{})[city]
-	return fmt.Sprint(provCode, ":", cityCode)
+	if cityCode == nil {
+		return provCode, 1000
+	}
+	return provCode, cityCode.(int)
 }

@@ -1,0 +1,20 @@
+package weibo
+
+func TestSearchRegionCode(t *testing.T) {
+    p, c := GetSearchRegionCode("安徽", "合肥")
+    if p != 34 || c != 1 {
+        t.Error("p:", p, "c:", c)
+    }
+    p, c = GetSearchRegionCode("安徽", "芜湖")
+    if p != 34 || c != 2 {
+        t.Error("p:", p, "c:", c)
+    }
+    p, c = GetSearchRegionCode("安-徽", "芜湖")
+    if p != 0 || c != 1000 {
+        t.Error("p:", p, "c:", c)
+    }
+    p, c = GetSearchRegionCode("安徽", "芜-湖")
+    if p != 24 || c != 1000 {
+        t.Error("p:", p, "c:", c)
+    }
+}

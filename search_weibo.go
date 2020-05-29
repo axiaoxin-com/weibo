@@ -309,8 +309,8 @@ func (c *SearchWeiboCondition) TimeScope(begin, end string) *SearchWeiboConditio
 
 // Region 设置地点范围，传入中文
 func (c *SearchWeiboCondition) Region(prov, city string) *SearchWeiboCondition {
-	code := GetSearchRegionCode(prov, city)
-	c.Result += ("&region=custom:" + code)
+	provCode, cityCode := GetSearchRegionCode(prov, city)
+	c.Result += fmt.Sprint("&region=custom:", provCode, ":", cityCode)
 	return c
 }
 
