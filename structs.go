@@ -1207,7 +1207,8 @@ type Status struct {
 
 // SearchWeiboResult 微博搜索结果结构
 type SearchWeiboResult struct {
-	User   User
+	Mid    string // 微博 mid 可用 mid 得到 id
+	User   User   // 用户信息
 	Status struct {
 		Origin  Status // 带有搜索结果的原始微博
 		Forward Status // 原始微博带有的转发微博

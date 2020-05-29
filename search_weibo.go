@@ -24,8 +24,12 @@ import (
 // 解析搜索结果
 func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 	results := []SearchWeiboResult{}
-	dom.Find("#pl_feedlist_index .card").Each(func(i int, s *goquery.Selection) {
+	dom.Find("#pl_feedlist_index .card-wrap").Each(func(i int, s *goquery.Selection) {
 		result := SearchWeiboResult{}
+
+		// 获取微博 mid
+		mid, _ := s.Attr("mid")
+		result.Mid = mid
 
 		// 获取用户 URL
 		homePage, _ := s.Find(".avator a").Attr("href")
