@@ -32,8 +32,7 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		result.ID = mid
 
 		// 获取用户 URL
-		homePage, _ := s.Find(".avator a").Attr("href")
-		if homePage != "" {
+		if homePage, _ := s.Find(".avator a").Attr("href"); homePage != "" {
 			result.User.HomePage = "https:" + homePage
 		}
 
@@ -51,8 +50,7 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		// 获取微博图片链接
 		picURLs := []string{}
 		s.Find(".content>div[node-type=feed_list_media_prev] ul li").Each(func(ii int, ss *goquery.Selection) {
-			picURL, _ := ss.Find("img").Attr("src")
-			if picURL != "" {
+			if picURL, _ := ss.Find("img").Attr("src"); picURL != "" {
 				// 替换缩略图链接为大图
 				picURL = strings.Replace(picURL, "orj360", "large", 1)
 				picURL = strings.Replace(picURL, "thumb150", "large", 1)
@@ -62,19 +60,16 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		result.Status.Origin.PicURLs = picURLs
 
 		// 获取微博视频链接：从属性参数中正则解析
-		videoActionData, _ := s.Find(".content .thumbnail .WB_video_h5").Attr("action-data")
-		if videoActionData != "" {
+		if videoActionData, _ := s.Find(".content .thumbnail .WB_video_h5").Attr("action-data"); videoActionData != "" {
 			re, _ := regexp.Compile("video_src=(.+video)")
-			matched := re.FindStringSubmatch(videoActionData)
-			if len(matched) == 2 {
+			if matched := re.FindStringSubmatch(videoActionData); len(matched) == 2 {
 				u, _ := url.QueryUnescape(matched[1])
 				result.Status.Origin.Video.URL = "https:" + u
 			}
 		}
 
 		// 获取微博视频封面链接
-		videoCover, _ := s.Find("div[node-type=fl_h5_video_pre] img").Attr("src")
-		if videoCover != "" {
+		if videoCover, _ := s.Find("div[node-type=fl_h5_video_pre] img").Attr("src"); videoCover != "" {
 			result.Status.Origin.Video.CoverURL = videoCover
 		}
 
@@ -84,31 +79,26 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		result.Status.Origin.Source = source
 
 		// 获取微博转发数
-		repost := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(2) a").Text())
 		repostCount := 0
-		if repost != "" {
-			sl := strings.Split(repost, " ")
-			if len(sl) == 2 {
+		if repost := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(2) a").Text()); repost != "" {
+			if sl := strings.Split(repost, " "); len(sl) == 2 {
 				repostCount, _ = strconv.Atoi(sl[1])
 			}
 		}
 		result.Status.Origin.RepostCount = repostCount
 
 		// 获取微博评论数
-		comment := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(3) a").Text())
 		commentCount := 0
-		if comment != "" {
-			sl := strings.Split(comment, " ")
-			if len(sl) == 2 {
+		if comment := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(3) a").Text()); comment != "" {
+			if sl := strings.Split(comment, " "); len(sl) == 2 {
 				commentCount, _ = strconv.Atoi(sl[1])
 			}
 		}
 		result.Status.Origin.CommentCount = commentCount
 
 		// 获取微博点赞数
-		like := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(4) a em").Text())
 		likeCount := 0
-		if like != "" {
+		if like := strings.TrimSpace(s.Find(".card-act ul li:nth-of-type(4) a em").Text()); like != "" {
 			likeCount, _ = strconv.Atoi(like)
 		}
 		result.Status.Origin.LikeCount = likeCount
@@ -120,8 +110,7 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		// 获取微博转发内容的图片链接
 		forwardPicURLs := []string{}
 		s.Find(".content .card-comment .con div[node-type=feed_list_media_prev] ul li").Each(func(ii int, ss *goquery.Selection) {
-			picURL, _ := ss.Find("img").Attr("src")
-			if picURL != "" {
+			if picURL, _ := ss.Find("img").Attr("src"); picURL != "" {
 				// 替换缩略图链接为大图
 				picURL = strings.Replace(picURL, "orj360", "large", 1)
 				picURL = strings.Replace(picURL, "thumb150", "large", 1)
@@ -130,39 +119,32 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		})
 		result.Status.Forward.PicURLs = forwardPicURLs
 
-		// 获取转发微博的发送时间
-		forwardPostTime := strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:first-of-type").Text())
+		// 获取转发微博的发送时间和来源
+		forwardPostTime, forwardSource := parseFromDom(s.Find(".content .card-comment .con .func .from"))
 		result.Status.Forward.PostTime = NormalizeTime(forwardPostTime)
-
-		// 获取转发微博的发送来源
-		result.Status.Forward.Source = strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:last-of-type").Text())
+		result.Status.Forward.Source = forwardSource
 
 		// 获取转发微博的转发数
-		forwardRepost := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(1) a").Text())
 		forwardRepostCount := 0
-		if forwardRepost != "" {
-			sl := strings.Split(forwardRepost, " ")
-			if len(sl) == 2 {
+		if forwardRepost := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(1) a").Text()); forwardRepost != "" {
+			if sl := strings.Split(forwardRepost, " "); len(sl) == 2 {
 				forwardRepostCount, _ = strconv.Atoi(sl[1])
 			}
 		}
 		result.Status.Forward.RepostCount = forwardRepostCount
 
 		// 获取转发微博的评论数
-		forwardComment := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(2) a").Text())
 		forwardCommentCount := 0
-		if forwardComment != "" {
-			sl := strings.Split(forwardComment, " ")
-			if len(sl) == 2 {
+		if forwardComment := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(2) a").Text()); forwardComment != "" {
+			if sl := strings.Split(forwardComment, " "); len(sl) == 2 {
 				forwardCommentCount, _ = strconv.Atoi(sl[1])
 			}
 		}
 		result.Status.Forward.CommentCount = forwardCommentCount
 
 		// 获取转发微博的点赞数
-		forwardLike := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(3) a em").Text())
 		forwardLikeCount := 0
-		if forwardLike != "" {
+		if forwardLike := strings.TrimSpace(s.Find(".content .card-comment .con .func ul li:nth-of-type(3) a em").Text()); forwardLike != "" {
 			forwardLikeCount, _ = strconv.Atoi(forwardLike)
 		}
 		result.Status.Forward.LikeCount = forwardLikeCount
@@ -182,7 +164,7 @@ func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 	html, _ := s.Html()
 	postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
 
-	// 包含来自直接去最后一个 a 标签
+	// 包含 来自 直接取最后一个 a 标签
 	if strings.Contains(html, "来自") {
 		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
 	}
