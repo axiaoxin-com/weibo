@@ -24,7 +24,7 @@ import (
 // 解析搜索结果
 func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 	results := []SearchWeiboResult{}
-	dom.Find("#pl_feedlist_index .card-wrap").Each(func(i int, s *goquery.Selection) {
+	dom.Find("#pl_feedlist_index div[class=card-wrap][action-type=feed_list_item]").Each(func(i int, s *goquery.Selection) {
 		result := SearchWeiboResult{}
 
 		// 获取微博 mid
