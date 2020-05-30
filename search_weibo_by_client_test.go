@@ -21,7 +21,7 @@ func TestSearchWeiboByClient(t *testing.T) {
 	page := 1
 	cond := &SearchWeiboCondition{}
 	// 原创 + 会员认证 + 包含音乐 + 时间段 + 地点
-	// cond = cond.TypeOri().TypeVip().ContainMusic().TimeScope("2020-05-01-0", "2020-06-01-0").Region("四川", "成都")
+	cond = cond.TypeOri().TypeVip().ContainMusic().TimeScope("2020-05-01-0", "2020-06-01-0").Region("四川", "成都")
 	resp, err := weibo.SearchWeibo(keyword, page, cond)
 	if err != nil {
 		t.Error(err)

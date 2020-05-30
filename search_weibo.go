@@ -197,97 +197,92 @@ func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 
 // SearchWeiboCondition 高级搜索筛选条件
 type SearchWeiboCondition struct {
-	Result string // 保存最后结果
-}
-
-// String 转化为 url 参数
-func (c *SearchWeiboCondition) String() string {
-	return c.Result
+	URLParam string // 保存最终组合到一起的搜索条件对应的 URL 参数
 }
 
 // TypeAll 设置微博搜索类型为 全部
 func (c *SearchWeiboCondition) TypeAll() *SearchWeiboCondition {
-	c.Result += "&typeall=1"
+	c.URLParam += "&typeall=1"
 	return c
 }
 
 // TypeHot 设置微博搜索类型为 热门
 func (c *SearchWeiboCondition) TypeHot() *SearchWeiboCondition {
-	c.Result += "&xsort=hot"
+	c.URLParam += "&xsort=hot"
 	return c
 }
 
 // TypeOri 设置微博搜索类型为 原创
 func (c *SearchWeiboCondition) TypeOri() *SearchWeiboCondition {
-	c.Result += "&scope=ori"
+	c.URLParam += "&scope=ori"
 	return c
 }
 
 // TypeAtten 设置微博搜索类型为 关注人
 func (c *SearchWeiboCondition) TypeAtten() *SearchWeiboCondition {
-	c.Result += "&atten=1"
+	c.URLParam += "&atten=1"
 	return c
 }
 
 // TypeVip 设置微博搜索类型为 认证用户
 func (c *SearchWeiboCondition) TypeVip() *SearchWeiboCondition {
-	c.Result += "&vip=1"
+	c.URLParam += "&vip=1"
 	return c
 }
 
 // TypeCategory 设置微博搜索类型为 认证用户
 func (c *SearchWeiboCondition) TypeCategory() *SearchWeiboCondition {
-	c.Result += "&category=4"
+	c.URLParam += "&category=4"
 	return c
 }
 
 // TypeViewpoint 设置微博搜索类型为 认证用户
 func (c *SearchWeiboCondition) TypeViewpoint() *SearchWeiboCondition {
-	c.Result += "&viewpoint=1"
+	c.URLParam += "&viewpoint=1"
 	return c
 }
 
 // ContainAll 设置包含条件为 全部
 func (c *SearchWeiboCondition) ContainAll() *SearchWeiboCondition {
-	c.Result += "&suball=1"
+	c.URLParam += "&suball=1"
 	return c
 }
 
 // ContainPic 设置包含条件为 包含图片
 func (c *SearchWeiboCondition) ContainPic() *SearchWeiboCondition {
-	c.Result += "&haspic=1"
+	c.URLParam += "&haspic=1"
 	return c
 }
 
 // ContainVideo 设置包含条件为 包含视频
 func (c *SearchWeiboCondition) ContainVideo() *SearchWeiboCondition {
-	c.Result += "&hasvideo=1"
+	c.URLParam += "&hasvideo=1"
 	return c
 }
 
 // ContainMusic 设置包含条件为 包含音乐
 func (c *SearchWeiboCondition) ContainMusic() *SearchWeiboCondition {
-	c.Result += "&hasmusic=1"
+	c.URLParam += "&hasmusic=1"
 	return c
 }
 
 // ContainLink 设置包含条件为 包含短链
 func (c *SearchWeiboCondition) ContainLink() *SearchWeiboCondition {
-	c.Result += "&haslink=1"
+	c.URLParam += "&haslink=1"
 	return c
 }
 
 // TimeScope 设置起止时间范围
 // 时间格式：2020-05-01-18 Y-m-d-H
 func (c *SearchWeiboCondition) TimeScope(begin, end string) *SearchWeiboCondition {
-	c.Result += ("&timescope=custom:" + begin + ":" + end)
+	c.URLParam += ("&timescope=custom:" + begin + ":" + end)
 	return c
 }
 
 // Region 设置地点范围，传入中文
 func (c *SearchWeiboCondition) Region(prov, city string) *SearchWeiboCondition {
 	provCode, cityCode := GetSearchRegionCode(prov, city)
-	c.Result += fmt.Sprint("&region=custom:", provCode, ":", cityCode)
+	c.URLParam += fmt.Sprint("&region=custom:", provCode, ":", cityCode)
 	return c
 }
 
@@ -306,7 +301,7 @@ func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
 // 支持分页，翻页时不要太快，否则会跳转安全验证页面
 // 支持高级搜索
 func (w *Weibo) SearchWeibo(keyword string, page int, condition *SearchWeiboCondition) ([]SearchWeiboResult, error) {
-	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d%s", keyword, page, condition.String())
+	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d%s", keyword, page, condition.URLParam)
 	logging.Debugs(nil, "weibo SearchWeibo URL:", URL)
 	resp, err := w.client.Get(URL)
 	if err != nil {
