@@ -176,47 +176,24 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 
 // 处理微博来源不统一的问题
 func parseFromDom(s *goquery.Selection) (postTime string, source string) {
-	html, _ := s.Html()
-
-	// 没有来源信息的情况只返回时间
-	if !strings.Contains(html, "来自") {
-		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
-		return
-	}
-
 	// 05月25日 21:26 @Mayday瑪莎 转发过  来自 微博 weibo.com
-	if strings.Contains(html, "转发过  来自") {
-		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
-		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
-		return
-	}
-
 	// 05月25日 21:02 @阿信 赞过
-	if strings.Contains(html, "赞过") && !strings.Contains(html, "来自") {
-		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
-		return
-	}
-
 	// 05月25日 22:05 @Mayday瑪莎 转赞过  来自 微博 weibo.com
-	if strings.Contains(html, "赞过") && strings.Contains(html, "来自") {
-		postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
-		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
-		return
-	}
-
 	// 8分钟前 转赞人数超过100  来自 HUAWEI P20 Pro
-	if strings.Contains(html, "转赞人数超过") {
-		if s.Find("a").Length() > 1 {
-			source = strings.TrimSpace(s.Find("a:last-of-type").Text())
-		}
-		sp := strings.Split(strings.TrimSpace(s.Find("a:first-of-type").Text()), "转赞人数超过")
-		postTime = strings.TrimSpace(sp[0])
-		return
+	// 8分钟前 转赞人数超过2000
+	html, _ := s.Html()
+	postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
+
+	// 包含来自直接去最后一个 a 标签
+	if strings.Contains(html, "来自") {
+		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
 	}
 
-	// 其余默认视为 15分钟前  来自 iPhone客户端
-	postTime = strings.TrimSpace(s.Find("a:first-of-type").Text())
-	source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+	// 该情况时间和文字在同一个标签
+	if strings.Contains(html, "转赞人数超过") {
+		sp := strings.Split(postTime, "转赞人数超过")
+		postTime = strings.TrimSpace(sp[0])
+	}
 	return
 }
 
