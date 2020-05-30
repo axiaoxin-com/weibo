@@ -36,6 +36,7 @@
 - [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
 - [微博综合（高级）搜索](https://github.com/axiaoxin-com/weibo/blob/master/search_weibo.go)
 - [获取微博高级搜索中地点的编号](https://github.com/axiaoxin-com/weibo/blob/master/search_region.go)
+- [微博发布时间标准化](https://github.com/axiaoxin-com/weibo/blob/master/normalize_post_time.go)
 
 ## 特性
 
