@@ -79,9 +79,8 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		}
 
 		// 获取微博发送时间和来源
-		// TODO: 时间标准化 https://github.com/dataabc/weibo-search/blob/master/weibo/utils/util.py#L53
 		postTime, source := parseFromDom(s.Find(".content>.from"))
-		result.Status.Origin.PostTime = postTime
+		result.Status.Origin.PostTime = NormalizeTime(postTime)
 		result.Status.Origin.Source = source
 
 		// 获取微博转发数
@@ -132,9 +131,8 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 		result.Status.Forward.PicURLs = forwardPicURLs
 
 		// 获取转发微博的发送时间
-		// TODO: 时间标准化 https://github.com/dataabc/weibo-search/blob/master/weibo/utils/util.py#L53
 		forwardPostTime := strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:first-of-type").Text())
-		result.Status.Forward.PostTime = forwardPostTime
+		result.Status.Forward.PostTime = NormalizeTime(forwardPostTime)
 
 		// 获取转发微博的发送来源
 		result.Status.Forward.Source = strings.TrimSpace(s.Find(".content .card-comment .con .func .from a:last-of-type").Text())
