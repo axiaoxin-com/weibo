@@ -206,9 +206,11 @@ func parseFromDom(s *goquery.Selection) (postTime string, source string) {
 
 	// 8分钟前 转赞人数超过100  来自 HUAWEI P20 Pro
 	if strings.Contains(html, "转赞人数超过") {
+		if s.Find("a").Length() > 1 {
+			source = strings.TrimSpace(s.Find("a:last-of-type").Text())
+		}
 		sp := strings.Split(strings.TrimSpace(s.Find("a:first-of-type").Text()), "转赞人数超过")
 		postTime = strings.TrimSpace(sp[0])
-		source = strings.TrimSpace(s.Find("a:last-of-type").Text())
 		return
 	}
 
