@@ -14,7 +14,9 @@ const TimeLayout = "2006年01月02日 15:04"
 // 刚刚、x秒前、x分钟前、x小时前、今天H:M、x月x日 -> Y-m-d H:M
 func NormalizeTime(t string) (nt string) {
 	now := time.Now()
-	if strings.Contains(t, "刚刚") {
+	if t == "" {
+		return
+	} else if strings.Contains(t, "刚刚") {
 		nt = now.Format(TimeLayout)
 	} else if strings.Contains(t, "秒") {
 		x := "-" + strings.TrimSpace(strings.Split(t, "秒")[0]) + "s"
