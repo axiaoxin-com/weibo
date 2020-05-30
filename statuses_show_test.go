@@ -27,7 +27,8 @@ func TestStatusesShow(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp, err := weibo.StatusesShow(token.AccessToken, 4496926160810304)
+	id := int64(4409293824089668)
+	resp, err := weibo.StatusesShow(token.AccessToken, id)
 	if err != nil {
 		t.Error(err)
 	}

@@ -29,7 +29,7 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 
 		// 获取微博 mid
 		mid, _ := s.Attr("mid")
-		result.Mid = mid
+		result.ID = mid
 
 		// 获取用户 URL
 		homePage, _ := s.Find(".avator a").Attr("href")
