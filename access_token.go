@@ -24,6 +24,15 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TokenResp 获取 access token 接口的返回结果
+type TokenResp struct {
+	RespError
+	AccessToken string `json:"access_token"` // access token
+	ExpiresIn   int64  `json:"expires_in"`   // ExpiresIn 秒之后 token 过期
+	UID         string `json:"uid"`
+	IsRealName  string `json:"isRealName"`
+}
+
 // AccessToken 传入授权码请求 access_token 接口，返回 TokenResp 对象
 func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
 	tokenURL := "https://api.weibo.com/oauth2/access_token"

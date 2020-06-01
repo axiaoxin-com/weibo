@@ -17,9 +17,40 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/axiaoxin-com/logging"
 	"github.com/pkg/errors"
 )
+
+// User 微博 html 解析出的用户对象
+type User struct {
+	NickName  string // 微博名
+	HomePage  string // 微博主页 URL 地址
+	AvatorURL string // 头像 URL 地址
+}
+
+// Status 微博 html 解析出的微博对象
+type Status struct {
+	Content      string   // 微博文本内容
+	PicURLs      []string // 微博图片链接
+	PostTime     string   // 微博发送时间
+	Source       string   // 微博发送来源
+	RepostCount  int      // 转发数
+	CommentCount int      // 评论数
+	LikeCount    int      // 点赞数
+	Video        struct {
+		URL      string // 微博视频链接
+		CoverURL string // 视频封面图片链接
+	}
+}
+
+// SearchWeiboResult 微博搜索结果结构
+type SearchWeiboResult struct {
+	ID     string // 微博 id
+	User   User   // 用户信息
+	Status struct {
+		Origin  Status // 带有搜索结果的原始微博
+		Forward Status // 原始微博带有的转发微博
+	}
+}
 
 // 解析搜索结果
 func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
@@ -148,7 +179,7 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 			forwardLikeCount, _ = strconv.Atoi(forwardLike)
 		}
 		result.Status.Forward.LikeCount = forwardLikeCount
-		logging.Debugf(nil, "--> %d: %+v", i, result)
+		// logging.Debugf(nil, "--> %d: %+v", i, result)
 		results = append(results, result)
 	})
 	return results
@@ -284,7 +315,7 @@ func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
 // 支持高级搜索
 func (w *Weibo) SearchWeibo(keyword string, page int, condition *SearchWeiboCondition) ([]SearchWeiboResult, error) {
 	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d%s", keyword, page, condition.URLParam)
-	logging.Debugs(nil, "weibo SearchWeibo URL:", URL)
+	// logging.Debugs(nil, "weibo SearchWeibo URL:", URL)
 	resp, err := w.client.Get(URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo SearchWeibo Get error")

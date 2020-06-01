@@ -16,9 +16,92 @@ import (
 	"github.com/pkg/errors"
 )
 
+// RespCommentsDestroyBatch CommentsDestroyBatch 接口返回结构
+type RespCommentsDestroyBatch []struct {
+	CreatedAt string `json:"created_at"`
+	ID        int64  `json:"id"`
+	Text      string `json:"text"`
+	Source    string `json:"source"`
+	Mid       string `json:"mid"`
+	User      struct {
+		ID               int    `json:"id"`
+		ScreenName       string `json:"screen_name"`
+		Name             string `json:"name"`
+		Province         string `json:"province"`
+		City             string `json:"city"`
+		Location         string `json:"location"`
+		Description      string `json:"description"`
+		URL              string `json:"url"`
+		ProfileImageURL  string `json:"profile_image_url"`
+		Domain           string `json:"domain"`
+		Gender           string `json:"gender"`
+		FollowersCount   int    `json:"followers_count"`
+		FriendsCount     int    `json:"friends_count"`
+		StatusesCount    int    `json:"statuses_count"`
+		FavouritesCount  int    `json:"favourites_count"`
+		CreatedAt        string `json:"created_at"`
+		Following        bool   `json:"following"`
+		AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+		Remark           string `json:"remark"`
+		GeoEnabled       bool   `json:"geo_enabled"`
+		Verified         bool   `json:"verified"`
+		AllowAllComment  bool   `json:"allow_all_comment"`
+		AvatarLarge      string `json:"avatar_large"`
+		VerifiedReason   string `json:"verified_reason"`
+		FollowMe         bool   `json:"follow_me"`
+		OnlineStatus     int    `json:"online_status"`
+		BiFollowersCount int    `json:"bi_followers_count"`
+	} `json:"user"`
+	Status struct {
+		CreatedAt           string        `json:"created_at"`
+		ID                  int64         `json:"id"`
+		Text                string        `json:"text"`
+		Source              string        `json:"source"`
+		Favorited           bool          `json:"favorited"`
+		Truncated           bool          `json:"truncated"`
+		InReplyToStatusID   string        `json:"in_reply_to_status_id"`
+		InReplyToUserID     string        `json:"in_reply_to_user_id"`
+		InReplyToScreenName string        `json:"in_reply_to_screen_name"`
+		Geo                 interface{}   `json:"geo"`
+		Mid                 string        `json:"mid"`
+		RepostsCount        int           `json:"reposts_count"`
+		CommentsCount       int           `json:"comments_count"`
+		Annotations         []interface{} `json:"annotations"`
+		User                struct {
+			ID               int    `json:"id"`
+			ScreenName       string `json:"screen_name"`
+			Name             string `json:"name"`
+			Province         string `json:"province"`
+			City             string `json:"city"`
+			Location         string `json:"location"`
+			Description      string `json:"description"`
+			URL              string `json:"url"`
+			ProfileImageURL  string `json:"profile_image_url"`
+			Domain           string `json:"domain"`
+			Gender           string `json:"gender"`
+			FollowersCount   int    `json:"followers_count"`
+			FriendsCount     int    `json:"friends_count"`
+			StatusesCount    int    `json:"statuses_count"`
+			FavouritesCount  int    `json:"favourites_count"`
+			CreatedAt        string `json:"created_at"`
+			Following        bool   `json:"following"`
+			AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+			Remark           string `json:"remark"`
+			GeoEnabled       bool   `json:"geo_enabled"`
+			Verified         bool   `json:"verified"`
+			AllowAllComment  bool   `json:"allow_all_comment"`
+			AvatarLarge      string `json:"avatar_large"`
+			VerifiedReason   string `json:"verified_reason"`
+			FollowMe         bool   `json:"follow_me"`
+			OnlineStatus     int    `json:"online_status"`
+			BiFollowersCount int    `json:"bi_followers_count"`
+		} `json:"user"`
+	} `json:"status"`
+}
+
 // CommentsDestroyBatch 根据评论 ID 批量删除评论
 // cids 需要删除的评论 ID
-func (w *Weibo) CommentsDestroyBatch(token string, cids ...int64) (*CommentsDestroyBatchResp, error) {
+func (w *Weibo) CommentsDestroyBatch(token string, cids ...int64) (*RespCommentsDestroyBatch, error) {
 	apiURL := "https://api.weibo.com/2/comments/destroy_batch.json"
 	sCids := []string{}
 	for _, cid := range cids {
@@ -44,12 +127,12 @@ func (w *Weibo) CommentsDestroyBatch(token string, cids ...int64) (*CommentsDest
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo CommentsDestroyBatch ReadAll error")
 	}
-	e := &ErrorResp{}
+	e := &RespError{}
 	json.Unmarshal(body, e)
 	if e.Error != "" && e.ErrorCode != 0 {
 		return nil, errors.New("weibo CommentsDestroyBatch resp error:" + e.Error)
 	}
-	r := &CommentsDestroyBatchResp{}
+	r := &RespCommentsDestroyBatch{}
 	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo CommentsDestroyBatch Unmarshal error:"+string(body))
 	}

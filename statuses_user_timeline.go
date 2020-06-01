@@ -28,6 +28,59 @@ import (
 	"github.com/pkg/errors"
 )
 
+// RespStatusesUserTimeline StatusesUserTimeline 接口返回结构
+type RespStatusesUserTimeline struct {
+	RespError
+	Statuses []struct {
+		CreatedAt           string        `json:"created_at"`
+		ID                  int64         `json:"id"`
+		Text                string        `json:"text"`
+		Source              string        `json:"source"`
+		Favorited           bool          `json:"favorited"`
+		Truncated           bool          `json:"truncated"`
+		InReplyToStatusID   string        `json:"in_reply_to_status_id"`
+		InReplyToUserID     string        `json:"in_reply_to_user_id"`
+		InReplyToScreenName string        `json:"in_reply_to_screen_name"`
+		Geo                 interface{}   `json:"geo"`
+		Mid                 string        `json:"mid"`
+		RepostsCount        int           `json:"reposts_count"`
+		CommentsCount       int           `json:"comments_count"`
+		Annotations         []interface{} `json:"annotations"`
+		User                struct {
+			ID               int    `json:"id"`
+			ScreenName       string `json:"screen_name"`
+			Name             string `json:"name"`
+			Province         string `json:"province"`
+			City             string `json:"city"`
+			Location         string `json:"location"`
+			Description      string `json:"description"`
+			URL              string `json:"url"`
+			ProfileImageURL  string `json:"profile_image_url"`
+			Domain           string `json:"domain"`
+			Gender           string `json:"gender"`
+			FollowersCount   int    `json:"followers_count"`
+			FriendsCount     int    `json:"friends_count"`
+			StatusesCount    int    `json:"statuses_count"`
+			FavouritesCount  int    `json:"favourites_count"`
+			CreatedAt        string `json:"created_at"`
+			Following        bool   `json:"following"`
+			AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+			Remark           string `json:"remark"`
+			GeoEnabled       bool   `json:"geo_enabled"`
+			Verified         bool   `json:"verified"`
+			AllowAllComment  bool   `json:"allow_all_comment"`
+			AvatarLarge      string `json:"avatar_large"`
+			VerifiedReason   string `json:"verified_reason"`
+			FollowMe         bool   `json:"follow_me"`
+			OnlineStatus     int    `json:"online_status"`
+			BiFollowersCount int    `json:"bi_followers_count"`
+		} `json:"user"`
+	} `json:"statuses"`
+	PreviousCursor int   `json:"previous_cursor"`
+	NextCursor     int64 `json:"next_cursor"`
+	TotalNumber    int   `json:"total_number"`
+}
+
 // StatusesUserTimeline 获取当前授权用户最新发表的微博列表
 // uid	int64	需要查询的用户ID。
 // screenName	string	需要查询的用户昵称。
@@ -38,7 +91,7 @@ import (
 // baseApp	int	是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用）。
 // feature	int	过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐。
 // trimUser	int	返回值中user字段开关，0：返回完整user字段、1：user字段仅返回user_id。
-func (w *Weibo) StatusesUserTimeline(token string, uid int64, screenName string, sinceID, maxID int64, count, page, baseApp, feature, trimUser int) (*StatusesUserTimelineResp, error) {
+func (w *Weibo) StatusesUserTimeline(token string, uid int64, screenName string, sinceID, maxID int64, count, page, baseApp, feature, trimUser int) (*RespStatusesUserTimeline, error) {
 	apiURL := "https://api.weibo.com/2/statuses/user_timeline.json"
 	data := url.Values{
 		"access_token": {token},
@@ -72,7 +125,7 @@ func (w *Weibo) StatusesUserTimeline(token string, uid int64, screenName string,
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesUserTimeline ReadAll error")
 	}
-	r := &StatusesUserTimelineResp{}
+	r := &RespStatusesUserTimeline{}
 	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesUserTimeline Unmarshal error:"+string(body))
 	}

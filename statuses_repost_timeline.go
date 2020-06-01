@@ -19,6 +19,104 @@ import (
 	"github.com/pkg/errors"
 )
 
+// RespStatusesRepostTimeline StatusesRepostTimeline 接口返回结构
+type RespStatusesRepostTimeline struct {
+	RespError
+	Reposts []struct {
+		CreatedAt           string        `json:"created_at"`
+		ID                  int64         `json:"id"`
+		Text                string        `json:"text"`
+		Source              string        `json:"source"`
+		Favorited           bool          `json:"favorited"`
+		Truncated           bool          `json:"truncated"`
+		InReplyToStatusID   string        `json:"in_reply_to_status_id"`
+		InReplyToUserID     string        `json:"in_reply_to_user_id"`
+		InReplyToScreenName string        `json:"in_reply_to_screen_name"`
+		Geo                 interface{}   `json:"geo"`
+		Mid                 string        `json:"mid"`
+		RepostsCount        int           `json:"reposts_count"`
+		CommentsCount       int           `json:"comments_count"`
+		Annotations         []interface{} `json:"annotations"`
+		User                struct {
+			ID               int    `json:"id"`
+			ScreenName       string `json:"screen_name"`
+			Name             string `json:"name"`
+			Province         string `json:"province"`
+			City             string `json:"city"`
+			Location         string `json:"location"`
+			Description      string `json:"description"`
+			URL              string `json:"url"`
+			ProfileImageURL  string `json:"profile_image_url"`
+			Domain           string `json:"domain"`
+			Gender           string `json:"gender"`
+			FollowersCount   int    `json:"followers_count"`
+			FriendsCount     int    `json:"friends_count"`
+			StatusesCount    int    `json:"statuses_count"`
+			FavouritesCount  int    `json:"favourites_count"`
+			CreatedAt        string `json:"created_at"`
+			Following        bool   `json:"following"`
+			AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+			Remark           string `json:"remark"`
+			GeoEnabled       bool   `json:"geo_enabled"`
+			Verified         bool   `json:"verified"`
+			AllowAllComment  bool   `json:"allow_all_comment"`
+			AvatarLarge      string `json:"avatar_large"`
+			VerifiedReason   string `json:"verified_reason"`
+			FollowMe         bool   `json:"follow_me"`
+			OnlineStatus     int    `json:"online_status"`
+			BiFollowersCount int    `json:"bi_followers_count"`
+		} `json:"user"`
+		RetweetedStatus struct {
+			CreatedAt           string        `json:"created_at"`
+			ID                  int64         `json:"id"`
+			Text                string        `json:"text"`
+			Source              string        `json:"source"`
+			Favorited           bool          `json:"favorited"`
+			Truncated           bool          `json:"truncated"`
+			InReplyToStatusID   string        `json:"in_reply_to_status_id"`
+			InReplyToUserID     string        `json:"in_reply_to_user_id"`
+			InReplyToScreenName string        `json:"in_reply_to_screen_name"`
+			Geo                 interface{}   `json:"geo"`
+			Mid                 string        `json:"mid"`
+			Annotations         []interface{} `json:"annotations"`
+			RepostsCount        int           `json:"reposts_count"`
+			CommentsCount       int           `json:"comments_count"`
+			User                struct {
+				ID               int    `json:"id"`
+				ScreenName       string `json:"screen_name"`
+				Name             string `json:"name"`
+				Province         string `json:"province"`
+				City             string `json:"city"`
+				Location         string `json:"location"`
+				Description      string `json:"description"`
+				URL              string `json:"url"`
+				ProfileImageURL  string `json:"profile_image_url"`
+				Domain           string `json:"domain"`
+				Gender           string `json:"gender"`
+				FollowersCount   int    `json:"followers_count"`
+				FriendsCount     int    `json:"friends_count"`
+				StatusesCount    int    `json:"statuses_count"`
+				FavouritesCount  int    `json:"favourites_count"`
+				CreatedAt        string `json:"created_at"`
+				Following        bool   `json:"following"`
+				AllowAllActMsg   bool   `json:"allow_all_act_msg"`
+				Remark           string `json:"remark"`
+				GeoEnabled       bool   `json:"geo_enabled"`
+				Verified         bool   `json:"verified"`
+				AllowAllComment  bool   `json:"allow_all_comment"`
+				AvatarLarge      string `json:"avatar_large"`
+				VerifiedReason   string `json:"verified_reason"`
+				FollowMe         bool   `json:"follow_me"`
+				OnlineStatus     int    `json:"online_status"`
+				BiFollowersCount int    `json:"bi_followers_count"`
+			} `json:"user"`
+		} `json:"retweeted_status"`
+	} `json:"reposts"`
+	PreviousCursor int `json:"previous_cursor"`
+	NextCursor     int `json:"next_cursor"`
+	TotalNumber    int `json:"total_number"`
+}
+
 // StatusesRepostTimeline 获取指定微博的转发微博列表
 // id 微博ID
 // sinceID 返回ID比sinceID大的微博（即比since_id时间晚的微博）
@@ -26,7 +124,7 @@ import (
 // count 单页返回的记录条数，最大不超过200。
 // page	返回结果的页码。
 // filterByAuthor	作者筛选类型，0：全部、1：我关注的人、2：陌生人
-func (w *Weibo) StatusesRepostTimeline(token string, id, sinceID, maxID int64, count, page, filterByAuthor int) (*StatusesRepostTimelineResp, error) {
+func (w *Weibo) StatusesRepostTimeline(token string, id, sinceID, maxID int64, count, page, filterByAuthor int) (*RespStatusesRepostTimeline, error) {
 	apiURL := "https://api.weibo.com/2/statuses/repost_timeline.json"
 	data := url.Values{
 		"access_token":     {token},
@@ -53,7 +151,7 @@ func (w *Weibo) StatusesRepostTimeline(token string, id, sinceID, maxID int64, c
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesRepostTimeline ReadAll error")
 	}
-	r := &StatusesRepostTimelineResp{}
+	r := &RespStatusesRepostTimeline{}
 	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo StatusesRepostTimeline Unmarshal error:"+string(body))
 	}

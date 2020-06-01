@@ -20,8 +20,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+// RespTokenInfo 查询 token 信息接口的返回结果
+type RespTokenInfo struct {
+	RespError
+	UID      string `json:"uid"`
+	Appkey   string `json:"appkey"`
+	Scope    string `json:"scope"`
+	CreateAt string `json:"create_at"`
+	ExpireIn string `json:"expire_in"`
+}
+
 // TokenInfo 获取用户 access_token 的授权相关信息，包括授权时间，过期时间和 scope 权限
-func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
+func (w *Weibo) TokenInfo(token string) (*RespTokenInfo, error) {
 	apiURL := "https://api.weibo.com/oauth2/get_token_info"
 	data := url.Values{
 		"access_token": {token},
@@ -41,12 +51,12 @@ func (w *Weibo) TokenInfo(token string) (*TokenInfoResp, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo TokenInfo ReadAll error")
 	}
-	tokenInfoResp := &TokenInfoResp{}
-	if err := json.Unmarshal(body, tokenInfoResp); err != nil {
+	r := &RespTokenInfo{}
+	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo TokenInfo Unmarshal error:"+string(body))
 	}
-	if tokenInfoResp.Error != "" && tokenInfoResp.ErrorCode != 0 {
-		return nil, errors.New("weibi TokenInfo resp error:" + tokenInfoResp.Error)
+	if r.Error != "" && r.ErrorCode != 0 {
+		return nil, errors.New("weibi TokenInfo resp error:" + r.Error)
 	}
-	return tokenInfoResp, nil
+	return r, nil
 }
