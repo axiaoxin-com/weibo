@@ -24,8 +24,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TokenResp 获取 access token 接口的返回结果
-type TokenResp struct {
+// RespToken 获取 access token 接口的返回结果
+type RespToken struct {
 	RespError
 	AccessToken string `json:"access_token"` // access token
 	ExpiresIn   int64  `json:"expires_in"`   // ExpiresIn 秒之后 token 过期
@@ -34,7 +34,7 @@ type TokenResp struct {
 }
 
 // AccessToken 传入授权码请求 access_token 接口，返回 TokenResp 对象
-func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
+func (w *Weibo) AccessToken(code string) (*RespToken, error) {
 	tokenURL := "https://api.weibo.com/oauth2/access_token"
 	data := url.Values{
 		"client_id":     {w.appkey},
@@ -58,12 +58,13 @@ func (w *Weibo) AccessToken(code string) (*TokenResp, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo AccessToken ReadAll error")
 	}
-	tokenResp := &TokenResp{}
-	if err := json.Unmarshal(body, tokenResp); err != nil {
+	r := &RespToken{}
+	if err := json.Unmarshal(body, r); err != nil {
 		return nil, errors.Wrap(err, "weibo AccessToken Unmarshal error:"+string(body))
 	}
-	if tokenResp.AccessToken == "" {
+	if r.AccessToken == "" {
 		return nil, errors.New("weibo AccessToken get token failed." + string(body))
 	}
-	return tokenResp, nil
+	w.token = r.AccessToken
+	return r, nil
 }

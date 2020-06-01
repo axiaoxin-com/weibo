@@ -24,6 +24,7 @@ type Weibo struct {
 	passwd        string
 	userAgent     string
 	crackPinFuncs []CrackPinFunc
+	token         string
 }
 
 // New 创建Weibo实例
