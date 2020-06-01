@@ -2,15 +2,12 @@
 
 新浪微博 Golang 版 SDK
 
-微博 API: <https://open.weibo.com/wiki/微博API>
-
 ## 功能
 
 代码组织结构已按新浪微博提供的接口拆分，已支持的功能列表：
 
-- [模拟电脑浏览器登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L200)
-- [注册验证码破解函数](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L81)
-- [模拟移动端登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L30)
+**官方 API:**
+
 - [获取 Authorize Code](https://github.com/axiaoxin-com/weibo/blob/master/authorize.go)
 - [获取 Access Token](https://github.com/axiaoxin-com/weibo/blob/master/access_token.go)
 - [查询 Access Token 信息](https://github.com/axiaoxin-com/weibo/blob/master/get_token_info.go)
@@ -33,6 +30,13 @@
 - [获取指定微博的转发微博列表](https://github.com/axiaoxin-com/weibo/blob/master/statuses_repost_timeline.go)
 - [通过个性化域名获取用户资料以及用户最新的一条微博](https://github.com/axiaoxin-com/weibo/blob/master/users_domain_show.go)
 - [获取当前登录用户的最新评论包括接收到的与发出的评论](https://github.com/axiaoxin-com/weibo/blob/master/comments_timeline.go)
+- [返回最新的公共微博](https://github.com/axiaoxin-com/weibo/blob/master/statuses_public_timeline.go)
+
+**非官方 API:** (登录后解析 HTML 结果)
+
+- [模拟电脑浏览器登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L200)
+- [注册验证码破解函数](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L81)
+- [模拟移动端登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L30)
 - [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
 - [微博搜索:（微博搜索页面综合关键字搜索，支持高级搜索）](https://github.com/axiaoxin-com/weibo/blob/master/search_weibo.go)
 - [获取微博高级搜索选项中的省市编号](https://github.com/axiaoxin-com/weibo/blob/master/search_region.go)
