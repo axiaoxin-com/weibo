@@ -1,7 +1,6 @@
 package weibo
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -20,7 +19,6 @@ func TestSummary(t *testing.T) {
 	if len(result) == 0 {
 		t.Error("result len = 0")
 	}
-
 	result, err = weiboT.SummaryRealtimeHot()
 	if err != nil {
 		t.Fatal(err)
@@ -39,8 +37,4 @@ func TestSummary(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(result) == 0 {
-		t.Fatal("result len = 0")
-	}
-	fmt.Println(result)
 }
