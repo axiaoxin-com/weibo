@@ -34,9 +34,9 @@
 
 **非官方 API:** (登录后解析 HTML 结果)
 
-- [模拟电脑浏览器登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L200)
+- [~~模拟电脑浏览器登录~~（已不可用）](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L200)
+- [二维码扫码登录](https://github.com/axiaoxin-com/weibo/blob/master/qr_login.go)
 - [注册验证码破解函数](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L81)
-- [模拟移动端登录](https://github.com/axiaoxin-com/weibo/blob/master/login.go#L30)
 - [微博热搜：热搜榜、要闻榜、好友搜](https://github.com/axiaoxin-com/weibo/blob/master/summary.go)
 - [微博搜索:（微博搜索页面综合关键字搜索，支持高级搜索）](https://github.com/axiaoxin-com/weibo/blob/master/search_weibo.go)
 - [获取微博高级搜索选项中的省市编号](https://github.com/axiaoxin-com/weibo/blob/master/search_region.go)
@@ -268,10 +268,12 @@ func main() {
 
 ## 开发难点
 
-#### 模拟登录
+#### ~~模拟登录~~
 
-要想代码层面直接获取到授权码，必须要在微博应用的授权页面进行模拟浏览器登录。
-登录参数会被 js 代码处理，需要翻译对应的 js 代码为 go ， crypto 包不熟，这里花了一些时间。
+~~要想代码层面直接获取到授权码，必须要在微博应用的授权页面进行模拟浏览器登录。
+登录参数会被 js 代码处理，需要翻译对应的 js 代码为 go ， crypto 包不熟，这里花了一些时间。~~
+
+貌似不行了，只能使用二维码扫码登录。或者自动登录步骤手动获取授权码后保存 token
 
 #### 如何处理模拟登录时遇到的验证码
 
