@@ -148,6 +148,9 @@ func (w *Weibo) preLogin() (*respPreLogin, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo preLogin ReadAll prelogin error")
 	}
+	if strings.Contains(string(body), "system error") {
+		return nil, errors.New(string(body))
+	}
 
 	r := &respPreLogin{}
 	if err := json.Unmarshal(body, r); err != nil {
