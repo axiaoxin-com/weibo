@@ -3,6 +3,7 @@
 package weibo
 
 import (
+	"fmt"
 	"math/rand"
 	"net"
 	"os/exec"
@@ -53,6 +54,7 @@ func RealIP() string {
 
 // TerminalOpen 调用终端打开文件命令
 func TerminalOpen(filePath string) error {
+	fmt.Println("try to open file:" + filePath)
 	switch runtime.GOOS {
 	case "linux":
 		return exec.Command("xdg-open", filePath).Run()
