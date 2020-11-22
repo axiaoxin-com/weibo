@@ -51,7 +51,7 @@ func (w *Weibo) QRLogin() error {
 	}
 	defer respimg.Body.Close()
 	img := respimg.Body
-	imgFilename := path.Join(os.TempDir(), "weibo_login_qr.jpg")
+	imgFilename := path.Join(os.TempDir(), callback+".jpg")
 	imgFile, err := os.Create(imgFilename)
 	if err != nil {
 		return errors.Wrap(err, "save qrcode image error")
