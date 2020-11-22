@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 	passwd := os.Getenv("weibo_passwd")
 	redirecturi := os.Getenv("weibo_redirect_uri")
 	weiboT = New(appkey, appsecret, username, passwd, redirecturi)
-	if err := weiboT.PCLogin(); err != nil {
+	if err := weiboT.QRLogin(); err != nil {
 		log.Fatal(err)
 	}
 
