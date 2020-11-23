@@ -62,7 +62,9 @@ func (w *Weibo) QRLogin() error {
 		return errors.Wrap(err, "qrcode image io copy error")
 	}
 
-	TerminalOpen(imgFilename)
+	if err := TerminalOpen(imgFilename); err != nil {
+		fmt.Println("TerminalOpen error:" + err.Error())
+	}
 
 	// 等待扫码
 	fmt.Printf("扫描二维码: %s 进行登录...\n", imgFilename)

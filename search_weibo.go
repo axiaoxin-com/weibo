@@ -179,7 +179,6 @@ func parseSearchWeiboResult(dom *goquery.Document) []SearchWeiboResult {
 			forwardLikeCount, _ = strconv.Atoi(forwardLike)
 		}
 		result.Status.Forward.LikeCount = forwardLikeCount
-		// logging.Debugf(nil, "--> %d: %+v", i, result)
 		results = append(results, result)
 	})
 	return results
@@ -315,7 +314,6 @@ func SearchWeibo(keyword string) ([]SearchWeiboResult, error) {
 // 支持高级搜索
 func (w *Weibo) SearchWeibo(keyword string, page int, condition *SearchWeiboCondition) ([]SearchWeiboResult, error) {
 	URL := fmt.Sprintf("https://s.weibo.com/weibo?q=%s&page=%d%s", keyword, page, condition.URLParam)
-	// logging.Debugs(nil, "weibo SearchWeibo URL:", URL)
 	resp, err := w.client.Get(URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "weibo SearchWeibo Get error")

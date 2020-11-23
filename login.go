@@ -21,9 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/axiaoxin-com/logging"
 	"github.com/pkg/errors"
-	"go.uber.org/zap"
 )
 
 // CrackPinFunc 验证码破解方法类型声明
@@ -267,7 +265,7 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 					pinCode, err = crack(pinPic)
 					// 破解失败尝试使用下一个crack
 					if err != nil {
-						logging.Error(nil, "weibo PCLogin crack pin error", zap.Error(err))
+						fmt.Println("weibo PCLogin crack pin error:" + err.Error())
 						continue
 					}
 					// 破解成功推出破解循环
@@ -292,7 +290,7 @@ LOGIN: // 登录label，正常登录时跳出破解验证码的循环
 				}
 				// 尝试直接打开图片
 				if err := TerminalOpen(pinFilename); err != nil {
-					logging.Error(nil, "weibo TerminalOpen error", zap.Error(err))
+					fmt.Println("weibo TerminalOpen error:", err.Error())
 				}
 
 				// 等待用户输入验证码
